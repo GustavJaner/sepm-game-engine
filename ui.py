@@ -34,7 +34,7 @@ class UI:
                 "right": 100,
                 "space": 32
             }
-        elif platform.system() == "Linux":
+        elif (platform.system() == "Linux" or platform.system() == "Darwin"):
             self.keys = {
                 "up": 65,
                 "down": 66,
