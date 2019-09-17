@@ -153,6 +153,8 @@ class GameEngine():
                     # If the current cursor position has a piece and there is no previous selected
                     if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
                         self.evaluate_possible_target(x, y)
+                        if len(self.possible_targets_coords) == 0:
+                            msg = "This piece has not any possible movement"
                     # If there is a selected piece
                     elif len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
                         # We move the piece if the cursor coords is in one of the targets
