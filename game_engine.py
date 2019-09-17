@@ -146,7 +146,7 @@ class GameEngine():
                     elif self.piece_to_move == (x, y):
                         self.clear_targets()
 
-            is_valid, msg = check_movement(self.board)
+            is_valid, msg = check_movement(self.board, self.board_size)
 
             if is_valid:
                 self.ui.set_up_board(self.board)
