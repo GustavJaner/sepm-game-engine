@@ -6,7 +6,7 @@ def check_movement(board, board_size):
         for col in range(board_size["width"]):
             if(board[row][col].is_piece()):
                 if board[row][col].role != "king":
-                    check_captured(board, board_size, row, col)
+                    check_captured_marker(board, board_size, row, col)
                 else:
                     check_king_escape(board, board_size,row,col)
                     check_captured_king(board, board_size, row, col)
@@ -34,14 +34,6 @@ def check_captured_marker(board, board_size, row, col):
         if (top != team and bot != team):
             board[row][col].remove_marker()
 
-
-def check_king_escape(board, board_size, row, col):
-    if( (row == 0 and col == 0)
-    or (row == board_size["width"]-1 and col == 0)
-    or (row == 0 and col == board_size["height"]-1)
-    or (row == board_size["width"]-1 and col == board_size["height"]-1)):
-        print("King escaped, white win")
-
 def check_captured_king(board, board_size, row, col):
     team = "white"
 
@@ -60,9 +52,10 @@ def check_captured_king(board, board_size, row, col):
             board[row][col].remove_marker()
             print("Black won!!")
 
-# 1. Check if move result in capturing a marker
-# --> remove that marker
 
-# 3 Win condition:
-# a: king in the corner -- White win
-# b: King is captureed -- Black win
+def check_king_escape(board, board_size, row, col):
+    if( (row == 0 and col == 0)
+    or (row == board_size["width"]-1 and col == 0)
+    or (row == 0 and col == board_size["height"]-1)
+    or (row == board_size["width"]-1 and col == board_size["height"]-1)):
+        print("King escaped, white win")
