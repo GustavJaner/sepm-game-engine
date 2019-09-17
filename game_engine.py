@@ -119,6 +119,39 @@ class GameEngine():
         print(msg)
         sys.exit()
 
+    def no_piece_selected(self):
+        msg = ""
+
+        # The cell is empty
+        if self.board[x][y].team == None:
+            return
+
+        if self.board[x][y].team == self.turn:
+            # If the current cursor position has a piece
+            if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
+                self.evaluate_possible_target(x, y)
+                if len(self.possible_targets_coords) == 0:
+                    msg = "This piece has not any possible movement"
+        else:
+            msg = "You can't move a piece of the other team"
+        return msg
+
+    def one_piece_selected(self):
+        msg = ""
+
+        if len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
+            # We move the piece if the cursor coords is in one of the targets
+            if (x, y) in self.possible_targets_coords:
+                self.move_piece(x, y)
+                self.turn = "white" if self.turn == "black" else "black"
+            # If the cursor is the same as the selected cell, then we cancel the move
+            elif self.piece_to_move == (x, y):
+                self.clear_targets()
+            else:
+                msg = "You can't move to that cell"
+
+        return msg
+
     def polling(self):
         msg = ""
         action = None
@@ -149,25 +182,11 @@ class GameEngine():
                 self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
             if action == "space":
-                if self.board[x][y].team == self.turn or self.board[x][y].team == None:
-                    # If the current cursor position has a piece and there is no previous selected
-                    if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
-                        self.evaluate_possible_target(x, y)
-                        if len(self.possible_targets_coords) == 0:
-                            msg = "This piece has not any possible movement"
-                    # If there is a selected piece
-                    elif len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
-                        # We move the piece if the cursor coords is in one of the targets
-                        if (x, y) in self.possible_targets_coords:
-                            self.move_piece(x, y)
-                            self.turn = "white" if self.turn == "black" else "black"
-                        # If the cursor is the same as the selected cell, then we cancel the move
-                        elif self.piece_to_move == (x, y):
-                            self.clear_targets()
-                        else:
-                            msg = "You can't move to that cell"
+                if len(self.possible_targets_coords) == 0:
+                    msg = no_piece_selected()
                 else:
-                    msg = "You can't move a piece of the other team"
+                    msg = one_piece_selected()
+
             if action == "exit":
                 self.finish_game("FINISH")
 
