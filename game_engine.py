@@ -1,5 +1,6 @@
 from ui import UI
 from cell import Cell
+from rules import check_movement
 
 
 class GameEngine():
@@ -107,6 +108,9 @@ class GameEngine():
     def polling(self):
         action = None
         while True:
+            # We store the board in case of invalid movement
+            old_board = self.board
+
             # Wait to read an arrow key
             action = self.ui.listener()
 
@@ -142,4 +146,10 @@ class GameEngine():
                     elif self.piece_to_move == (x, y):
                         self.clear_targets()
 
-            self.ui.set_up_board(self.board)
+            is_valid, msg = check_movement(self.board)
+
+            if is_valid:
+                self.ui.set_up_board(self.board)
+            else:
+                # maybe print msg
+                self.board = old_board
