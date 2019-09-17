@@ -171,7 +171,7 @@ class GameEngine():
 
             is_valid, msg2 = check_movement(self.board)
 
-            if is_valid and action != None:
+            if is_valid:
                 err = self.ui.print_board(self.board, self.turn, msg)
 
                 if err != None:

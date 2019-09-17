@@ -68,15 +68,12 @@ class UI:
         self.board_str += str_row + "\n\t"
 
     def listener(self):
-        while True:
-            ch = self.win.getch()
+        ch = self.win.getch()
 
-            ch = chr(ch).lower()
-
-            if ch in self.keys.values():
-                break
+        ch = chr(ch).lower()
 
         action = None
+
         if ch == self.keys["up"]:
             action = "up"
         elif ch == self.keys["down"]:
