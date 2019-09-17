@@ -119,7 +119,7 @@ class GameEngine():
         print(msg)
         sys.exit()
 
-    def no_piece_selected(self):
+    def no_piece_selected(self, x, y):
         msg = ""
 
         # The cell is empty
@@ -136,7 +136,7 @@ class GameEngine():
             msg = "You can't move a piece of the other team"
         return msg
 
-    def one_piece_selected(self):
+    def one_piece_selected(self, x, y):
         msg = ""
 
         if len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
@@ -183,9 +183,9 @@ class GameEngine():
 
             if action == "space":
                 if len(self.possible_targets_coords) == 0:
-                    msg = no_piece_selected()
+                    msg = self.no_piece_selected(x, y)
                 else:
-                    msg = one_piece_selected()
+                    msg = self.one_piece_selected(x, y)
 
             if action == "exit":
                 self.finish_game("FINISH")
