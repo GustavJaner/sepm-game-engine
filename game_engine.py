@@ -157,7 +157,7 @@ class GameEngine():
         action = None
         while True:
             # We store the board in case of invalid movement
-            old_board = self.board # TODO redundant after new rules commit?
+            old_board = self.board  # TODO redundant after new rules commit?
 
             # Wait to read an arrow key
             action = self.ui.listener()
@@ -182,6 +182,7 @@ class GameEngine():
                 self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
             if action == "space":
+                # TODO if user clicks in empty cell, "None" is visible
                 if len(self.possible_targets_coords) == 0:
                     msg = self.no_piece_selected(x, y)
                 else:
@@ -193,10 +194,8 @@ class GameEngine():
             won, team = check_movement(self.board, self.board_size)
 
             if (won):
-                print("team %s won!" % team)
-
                 # TODO keep the score of who won, increment the score here ++
+                # TODO start new game
+                self.finish_game(f"Team {team} won!")
 
-                return # TODO start new game
-
-            self.ui.set_up_board(self.board)
+            self.ui.print_board(self.board, self.turn, msg)
