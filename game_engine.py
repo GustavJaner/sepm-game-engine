@@ -1,3 +1,8 @@
+
+import sys
+
+import curses
+
 from ui import UI
 from cell import Cell
 from rules import check_movement
@@ -9,11 +14,15 @@ class GameEngine():
     board_size = {"width": -1, "height": -1}
     possible_targets_coords = []
     piece_to_move = None
+    turn = "white"
 
     def __init__(self):
         self.set_up_board()
         self.ui = UI()
-        self.ui.set_up_board(self.board)
+        err = self.ui.print_board(self.board, self.turn)
+        if err != None:
+            self.finish_game(err)
+
         self.polling()
 
     def set_up_board(self):
@@ -105,7 +114,13 @@ class GameEngine():
             for c in r:
                 c.set_possible_target(False)
 
+    def finish_game(self, msg):
+        curses.endwin()
+        print(msg)
+        sys.exit()
+
     def polling(self):
+        msg = ""
         action = None
         while True:
             # We store the board in case of invalid movement
@@ -134,22 +149,35 @@ class GameEngine():
                 self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
             if action == "space":
-                # If the current cursor position has a piece and there is no previous selected
-                if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
-                    self.evaluate_possible_target(x, y)
-                # If there is a selected piece
-                elif len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
-                    # We move the piece if the cursor coords is in one of the targets
-                    if (x, y) in self.possible_targets_coords:
-                        self.move_piece(x, y)
-                    # If the cursor is the same as the selected cell, then we cancel the move
-                    elif self.piece_to_move == (x, y):
-                        self.clear_targets()
+                if self.board[x][y].team == self.turn or self.board[x][y].team == None:
+                    # If the current cursor position has a piece and there is no previous selected
+                    if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
+                        self.evaluate_possible_target(x, y)
+                    # If there is a selected piece
+                    elif len(self.possible_targets_coords) > 0 and self.piece_to_move != None:
+                        # We move the piece if the cursor coords is in one of the targets
+                        if (x, y) in self.possible_targets_coords:
+                            self.move_piece(x, y)
+                            self.turn = "white" if self.turn == "black" else "black"
+                        # If the cursor is the same as the selected cell, then we cancel the move
+                        elif self.piece_to_move == (x, y):
+                            self.clear_targets()
+                        else:
+                            msg = "You can't move to that cell"
+                else:
+                    msg = "You can't move a piece of the other team"
+            if action == "exit":
+                self.finish_game("FINISH")
 
-            is_valid, msg = check_movement(self.board)
+            is_valid, msg2 = check_movement(self.board)
 
-            if is_valid:
-                self.ui.set_up_board(self.board)
+            if is_valid and action != None:
+                err = self.ui.print_board(self.board, self.turn, msg)
+
+                if err != None:
+                    self.finish_game(err)
+
+                msg = ""
             else:
                 # maybe print msg
                 self.board = old_board
