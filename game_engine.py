@@ -109,7 +109,7 @@ class GameEngine():
         action = None
         while True:
             # We store the board in case of invalid movement
-            old_board = self.board
+            old_board = self.board # TODO redundant after new rules commit?
 
             # Wait to read an arrow key
             action = self.ui.listener()
@@ -146,10 +146,12 @@ class GameEngine():
                     elif self.piece_to_move == (x, y):
                         self.clear_targets()
 
-            is_valid, msg = check_movement(self.board, self.board_size)
+            won, team = check_movement(self.board, self.board_size)
+            if (won):
+                print("team %s won!" % team)
 
-            if is_valid:
-                self.ui.set_up_board(self.board)
-            else:
-                # maybe print msg
-                self.board = old_board
+                # TODO keep the score of who won, increment the score here ++
+
+                return # TODO start new game
+
+            self.ui.set_up_board(self.board)
