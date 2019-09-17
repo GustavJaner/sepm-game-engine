@@ -22,3 +22,7 @@ class Cell():
 
     def set_possible_target(self, status):
         self.possible_target = status
+
+    def remove_marker(self):
+        self.role = None
+        self.team = None

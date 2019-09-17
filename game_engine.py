@@ -157,7 +157,7 @@ class GameEngine():
         action = None
         while True:
             # We store the board in case of invalid movement
-            old_board = self.board
+            old_board = self.board # TODO redundant after new rules commit?
 
             # Wait to read an arrow key
             action = self.ui.listener()
@@ -190,15 +190,13 @@ class GameEngine():
             if action == "exit":
                 self.finish_game("FINISH")
 
-            is_valid, msg2 = check_movement(self.board)
+            won, team = check_movement(self.board, self.board_size)
 
-            if is_valid:
-                err = self.ui.print_board(self.board, self.turn, msg)
+            if (won):
+                print("team %s won!" % team)
 
-                if err != None:
-                    self.finish_game(err)
+                # TODO keep the score of who won, increment the score here ++
 
-                msg = ""
-            else:
-                # maybe print msg
-                self.board = old_board
+                return # TODO start new game
+
+            self.ui.set_up_board(self.board)
