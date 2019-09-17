@@ -25,23 +25,14 @@ class UI:
             "cross": "\u253c"  # ┼
         }
 
-        self.keys = []
-        if platform.system() == "Windows":
-            self.keys = {
-                "up": 119,
-                "down": 115,
-                "left": 97,
-                "right": 100,
-                "space": 32
-            }
-        elif (platform.system() == "Linux" or platform.system() == "Darwin"):
-            self.keys = {
-                "up": 65,
-                "down": 66,
-                "left": 68,
-                "right": 67,
-                "space": 32
-            }
+        self.keys = {
+            "up": "w",
+            "down": "s",
+            "left": "a",
+            "right": "d",
+            "space": " ",
+            "exit": "q"
+        }
 
         self.win = curses.initscr()
 
@@ -54,7 +45,7 @@ class UI:
 
         str_bar += right_wall
 
-        self.board_str += str_bar + "\n"
+        self.board_str += str_bar + "\n\t"
 
     def print_row(self, row, i):
 
@@ -74,34 +65,37 @@ class UI:
             else:
                 str_row += f" {char_to_print} {vertical_wall}"
 
-        self.board_str += str_row + "\n"
+        self.board_str += str_row + "\n\t"
 
     def listener(self):
-        while True:
-            ch = self.win.getch()
+        ch = self.win.getch()
 
-            if ch in self.keys.values():
-                break
-            time.sleep(0.05)
-        dir = None
+        ch = chr(ch).lower()
+
+        action = None
+
         if ch == self.keys["up"]:
-            dir = "up"
+            action = "up"
         elif ch == self.keys["down"]:
-            dir = "down"
+            action = "down"
         elif ch == self.keys["left"]:
-            dir = "left"
+            action = "left"
         elif ch == self.keys["right"]:
-            dir = "right"
+            action = "right"
         elif ch == self.keys["space"]:
-            dir = "space"
+            action = "space"
+        elif ch == self.keys["exit"]:
+            action = "exit"
 
-        return dir
+        return action
 
-    def set_up_board(self, board):
+    def print_board(self, board, turn, msg=""):
+        # Empty the board before creating the new one
+        self.board_str = "\t"
+
         # Get the length of the first row.
-        #
-        #
-        #  TODO: Check that all rows have the same length
+        if len(set(map(len, board))) not in (0, 1):
+            return "The length of the rows in the board is not the same"
         ncolumns = len(board[0])
 
         # Set the top bar
@@ -117,7 +111,12 @@ class UI:
                 self.print_bar(
                     ncolumns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
 
+        self.win.clear()
         self.win.scrollok(1)
+        self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
 
-        # self.listener()
+        # List showing the options
+        self.win.addstr("\n\n\tMove cursor: WASD")
+        self.win.addstr("\n\tSelect / Deselect / Move piece: space")
+        self.win.addstr("\n\tFor finish the game: Q\n")
