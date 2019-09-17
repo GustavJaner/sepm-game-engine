@@ -115,3 +115,8 @@ class UI:
         self.win.scrollok(1)
         self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
+
+        # List showing the options
+        self.win.addstr("\n\n\tMove cursor: WASD")
+        self.win.addstr("\n\tSelect / Deselect / Move piece: space")
+        self.win.addstr("\n\tFor finish the game: Q\n")
