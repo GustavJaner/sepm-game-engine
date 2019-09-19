@@ -8,9 +8,9 @@ class Cell():
         if self.role == "king":
             char = "K"
         elif self.team == "white":
-            char = "W"
+            char = "\u25A0"
         elif self.team == "black":
-            char = "B"
+            char = "\u25A1"
         elif self.possible_target:
             char = "·"
         else:
@@ -22,3 +22,7 @@ class Cell():
 
     def set_possible_target(self, status):
         self.possible_target = status
+
+    def remove_marker(self):
+        self.role = None
+        self.team = None
