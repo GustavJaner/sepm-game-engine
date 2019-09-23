@@ -36,7 +36,9 @@ class GameEngine():
                         - - - - W - - - -
                         - - - - B - - - -
                         - - - B B B - - -"""
+        self.str2board(str_board)
 
+    def str2board(self, str_board):
         for str_row in str_board.split("\n"):
             row = []
 
@@ -124,7 +126,7 @@ class GameEngine():
 
         # The cell is empty
         if self.board[x][y].team == None:
-            return
+            return ""
 
         if self.board[x][y].team == self.turn:
             # If the current cursor position has a piece
@@ -156,9 +158,6 @@ class GameEngine():
         msg = ""
         action = None
         while True:
-            # We store the board in case of invalid movement
-            old_board = self.board  # TODO redundant after new rules commit?
-
             # Wait to read an arrow key
             action = self.ui.listener()
 
@@ -182,7 +181,6 @@ class GameEngine():
                 self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
             if action == "space":
-                # TODO if user clicks in empty cell, "None" is visible
                 if len(self.possible_targets_coords) == 0:
                     msg = self.no_piece_selected(x, y)
                 else:
