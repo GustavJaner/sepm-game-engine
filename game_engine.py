@@ -5,7 +5,10 @@ import curses
 
 from ui import UI
 from cell import Cell
+from screens import *
 from rules import check_movement
+
+HOME_SCREEN = ["Local game", "Stats", "Quit"]
 
 
 class GameEngine():
@@ -19,11 +22,7 @@ class GameEngine():
     def __init__(self):
         self.set_up_board()
         self.ui = UI()
-        err = self.ui.print_board(self.board, self.turn)
-        if err != None:
-            self.finish_game(err)
-
-        self.polling()
+        self.show_menu("home_screen")
 
     def set_up_board(self):
         # Initial set up. It can be changed
@@ -187,7 +186,7 @@ class GameEngine():
                     msg = self.one_piece_selected(x, y)
 
             if action == "exit":
-                self.finish_game("FINISH")
+                self.show_menu("home_screen")
 
             won, team = check_movement(self.board, self.board_size)
 
@@ -197,3 +196,14 @@ class GameEngine():
                 self.finish_game(f"Team {team} won!")
 
             self.ui.print_board(self.board, self.turn, msg)
+
+    def show_menu(self, menu_type):
+        if menu_type == "home_screen":
+            option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
+            if option_selected == HOME_SCREEN[0]:
+                err = self.ui.print_board(self.board, self.turn)
+                if err != None:
+                    self.finish_game(err)
+                self.polling()
+            elif option_selected == HOME_SCREEN[2]:
+                self.finish_game("Bye!")
