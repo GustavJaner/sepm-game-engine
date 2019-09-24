@@ -114,11 +114,19 @@ class UI:
                     ncolumns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
 
         self.win.clear()
+        curses.curs_set(0)
         self.win.scrollok(1)
         self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
 
         # List showing the options
-        self.win.addstr("\n\n\tMove cursor: WASD")
-        self.win.addstr("\n\tSelect / Deselect / Move piece: space")
-        self.win.addstr("\n\tFor finish the game: Q\n")
+        player1 = 11
+        player2 = 8
+        tie = 3
+        first_line = "\n\n\tMove cursor: WASD".ljust(
+            51) + f"Player 1: {player1}"
+        second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
+            50) + f"Player 2: {player2}"
+        third_line = "\n\tOpen menu: Q".ljust(
+            50) + f"Tie: {tie}\n\n"
+        self.win.addstr(first_line + second_line + third_line)

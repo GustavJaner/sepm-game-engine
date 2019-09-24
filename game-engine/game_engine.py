@@ -8,7 +8,7 @@ from cell import Cell
 from screens import *
 from rules import check_movement
 
-HOME_SCREEN = ["Local game", "Stats", "Quit"]
+HOME_SCREEN = ["Local game", "Quit"]
 
 
 class GameEngine():
@@ -205,5 +205,5 @@ class GameEngine():
                 if err != None:
                     self.finish_game(err)
                 self.polling()
-            elif option_selected == HOME_SCREEN[2]:
+            elif option_selected == HOME_SCREEN[1]:
                 self.finish_game("Bye!")
