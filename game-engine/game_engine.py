@@ -1,6 +1,4 @@
-
 import sys
-
 import curses
 
 from ui import UI
@@ -8,8 +6,7 @@ from cell import Cell
 from screens import *
 from rules import check_movement
 
-HOME_SCREEN = ["Local game", "Stats", "Quit"]
-
+HOME_SCREEN = ["Local game", "Quit"]
 
 class GameEngine():
     board = []
@@ -97,7 +94,6 @@ class GameEngine():
             if not self.board[x][y2].is_piece():
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
-
             else:
                 break
 
@@ -147,60 +143,66 @@ class GameEngine():
             # We move the piece if the cursor coords is in one of the targets
             if (x, y) in self.possible_targets_coords:
                 self.move_piece(x, y)
+
+                won, team, captured = check_movement(self.board, self.board_size, self.turn)
+                if won:
+                    self.finish_game("Team " + team + " won")
+
                 self.turns_left = self.turns_left-1
                 if (self.turns_left == 0):
-                    self.finish_game()
-                else:
-                    self.turn = "white" if self.turn == "black" else "black"
+                    self.finish_game("Tie!")
+
+                self.turn = "white" if self.turn == "black" else "black"
+
+
             # If the cursor is the same as the selected cell, then we cancel the move
             elif self.piece_to_move == (x, y):
                 self.clear_targets()
             else:
                 msg = "You can't move to that cell"
-
         return msg
 
     def polling(self):
         msg = ""
         action = None
         while True:
+            won, team, captured = check_movement(self.board, self.board_size, self.turn)
+            if won:
+                self.finish_game("team " + team + " won")
+            if captured:
+                self.turn = "white" if self.turn == "black" else "black"
+
             # Wait to read an arrow key
-            action = self.ui.listener()
+            else:
+                action = self.ui.listener()
+                if(action):
+                    x = self.ui.cursor_pos[0]
+                    y = self.ui.cursor_pos[1]
 
-            x = self.ui.cursor_pos[0]
-            y = self.ui.cursor_pos[1]
+                    if action == "up":
+                        x -= 1
+                        self.ui.cursor_pos = (max(0, x), y)
 
-            if action == "up":
-                x -= 1
-                self.ui.cursor_pos = (max(0, x), y)
+                    if action == "down":
+                        x += 1
+                        self.ui.cursor_pos = (min(x, self.board_size["height"]-1), y)
 
-            if action == "down":
-                x += 1
-                self.ui.cursor_pos = (min(x, self.board_size["height"]-1), y)
+                    if action == "left":
+                        y -= 1
+                        self.ui.cursor_pos = (x, max(0, y))
 
-            if action == "left":
-                y -= 1
-                self.ui.cursor_pos = (x, max(0, y))
+                    if action == "right":
+                        y += 1
+                        self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
-            if action == "right":
-                y += 1
-                self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
+                    if action == "space":
+                        if len(self.possible_targets_coords) == 0:
+                            msg = self.no_piece_selected(x, y)
+                        else:
+                            msg = self.one_piece_selected(x, y)
 
-            if action == "space":
-                if len(self.possible_targets_coords) == 0:
-                    msg = self.no_piece_selected(x, y)
-                else:
-                    msg = self.one_piece_selected(x, y)
-
-            if action == "exit":
-                self.show_menu("home_screen")
-
-            won, team = check_movement(self.board, self.board_size)
-
-            if (won):
-                # TODO keep the score of who won, increment the score here ++
-                # TODO start new game
-                self.finish_game(f"Team {team} won!")
+                    if action == "exit":
+                        self.show_menu("home_screen")
 
             self.ui.print_board(self.board, self.turn, self.turns_left, msg)
 
@@ -212,5 +214,5 @@ class GameEngine():
                 if err != None:
                     self.finish_game(err)
                 self.polling()
-            elif option_selected == HOME_SCREEN[2]:
+            elif option_selected == HOME_SCREEN[1]:
                 self.finish_game("Bye!")
