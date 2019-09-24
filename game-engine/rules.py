@@ -42,13 +42,25 @@ def check_captured_king(board, board_size, row, col):
     team = "white"
     left, right, top, bot = None, None, None, None
 
-    if (col-1 >= 0 and col+1 <= board_size["height"]-1):
+    if (col-1 >= 0):
         left = board[row][col-1].team
-        right = board[row][col+1].team
+    else:
+        left = "wall"
 
-    if (row-1 >= 0 and row+1 <= board_size["width"]-1):
-        top = board[row+1][col].team
-        bot = board[row-1][col].team
+    if (col+1 <= board_size["height"]-1):
+        right = board[row][col+1].team
+    else:
+        right = "wall"
+
+    if (row-1 >= 0):
+        top = board[row-1][col].team
+    else:
+        top = "wall"
+        
+    if (row+1 <= board_size["width"]-1):
+        bot = board[row+1][col].team
+    else:
+        bot = "wall" 
 
     if (left != None and right != None and top != None and bot != None):
         if (left != team and right != team and top != team and bot != team):
