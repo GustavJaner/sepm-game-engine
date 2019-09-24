@@ -26,7 +26,7 @@ class GameEngine():
 
     def set_up_board(self):
         # Initial set up. It can be changed
-        str_board = """ - - - B B B - - -
+        str_board = """ + - - B B B - - +
                         - - - - B - - - -
                         - - - - W - - - -
                         B - - - W - - - B
@@ -34,7 +34,7 @@ class GameEngine():
                         B - - - W - - - B
                         - - - - W - - - -
                         - - - - B - - - -
-                        - - - B B B - - -"""
+                        + - - B B B - - +"""
         self.str2board(str_board)
 
     def str2board(self, str_board):
@@ -44,6 +44,7 @@ class GameEngine():
             for piece in str_row.strip().split(" "):
                 team = None
                 role = None
+                corner = False
 
                 if piece == "B":
                     team = "black"
@@ -52,10 +53,14 @@ class GameEngine():
 
                 if piece == "K":
                     role = "king"
+                    corner = True
                 elif piece == "B" or piece == "W":
                     role = "marker"
 
-                p = Cell(team, role)
+                if piece == "+":
+                    corner = True
+
+                p = Cell(team, role, corner)
                 row.append(p)
 
             self.board.append(row)
@@ -67,7 +72,9 @@ class GameEngine():
         self.possible_targets_coords = []
         # It checks from the piece to the left
         for x2 in range(x-1, -1, -1):
-            if not self.board[x2][y].is_piece():
+            if not self.board[x2][y].is_piece() and not self.is_middle(x2, y):
+                if self.turn=="black" and self.board[x2][y].corner:
+                    break
                 self.board[x2][y].set_possible_target(True)
                 self.possible_targets_coords.append((x2, y))
             else:
@@ -75,7 +82,9 @@ class GameEngine():
 
         # It checks from the piece to the right
         for x2 in range(x+1, self.board_size["width"]):
-            if not self.board[x2][y].is_piece():
+            if not self.board[x2][y].is_piece() and not self.is_middle(x2, y):
+                if self.turn=="black" and self.board[x2][y].corner:
+                    break
                 self.board[x2][y].set_possible_target(True)
                 self.possible_targets_coords.append((x2, y))
             else:
@@ -83,7 +92,9 @@ class GameEngine():
 
         # It checks from the piece to the top
         for y2 in range(y-1, -1, -1):
-            if not self.board[x][y2].is_piece():
+            if not self.board[x][y2].is_piece() and not self.is_middle(x, y2):
+                if self.turn=="black" and self.board[x][y2].corner:
+                    break
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
             else:
@@ -91,7 +102,9 @@ class GameEngine():
 
         # It checks from the piece to the bottom
         for y2 in range(y+1, self.board_size["height"]):
-            if not self.board[x][y2].is_piece():
+            if not self.board[x][y2].is_piece() and not self.is_middle(x, y2):
+                if self.turn=="black" and self.board[x][y2].corner:
+                    break
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
             else:
@@ -99,6 +112,11 @@ class GameEngine():
 
         if len(self.possible_targets_coords) != 0:
             self.piece_to_move = (x, y)
+
+    def is_middle(self, x, y):
+        if x == 4 and y == 4:
+            return True
+        return False
 
     def move_piece(self, dest_x, dest_y):
         destination = self.board[dest_x][dest_y]
