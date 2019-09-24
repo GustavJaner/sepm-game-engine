@@ -87,7 +87,7 @@ class UI:
 
         return None
 
-    def print_board(self, board, turn, msg=""):
+    def print_board(self, board, turn, turns_left, msg=""):
         # Empty the board before creating the new one
         self.board_str = "\t"
 
@@ -118,6 +118,7 @@ class UI:
         self.win.scrollok(1)
         self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
+        self.win.addstr(f"Turns left: {turns_left}")
 
         # List showing the options
         player1 = 11
