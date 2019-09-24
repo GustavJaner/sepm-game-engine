@@ -1,5 +1,5 @@
 def check_movement(board, board_size, turn):
-    won, team, captured = False, "", False
+    captured = False, "", False
     for row in range(board_size["height"]):
         for col in range(board_size["width"]):
             if board[row][col].is_piece():
@@ -15,7 +15,6 @@ def check_movement(board, board_size, turn):
 
     # return false as long as no player has won
     return False, "", captured
-
 
 def check_captured_marker(board, board_size, row, col):
     team = board[row][col].team
@@ -39,7 +38,6 @@ def check_captured_marker(board, board_size, row, col):
             board[row][col].remove_marker()
             return True
 
-
 def check_captured_king(board, board_size, row, col):
     team = "white"
     left, right, top, bot = None, None, None, None
@@ -56,7 +54,6 @@ def check_captured_king(board, board_size, row, col):
         if (left != team and right != team and top != team and bot != team):
             board[row][col].remove_marker()
             return True
-
 
 def check_king_escape(board, board_size, row, col):
     if ((row == 0 and col == 0)

@@ -1,6 +1,4 @@
-
 import sys
-
 import curses
 
 from ui import UI
@@ -9,7 +7,6 @@ from screens import *
 from rules import check_movement
 
 HOME_SCREEN = ["Local game", "Stats", "Quit"]
-
 
 class GameEngine():
     board = []
@@ -94,7 +91,6 @@ class GameEngine():
             if not self.board[x][y2].is_piece():
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
-
             else:
                 break
 
@@ -156,7 +152,6 @@ class GameEngine():
                 self.clear_targets()
             else:
                 msg = "You can't move to that cell"
-
         return msg
 
     def polling(self):
@@ -164,11 +159,11 @@ class GameEngine():
         action = None
         while True:
             won, team, captured = check_movement(self.board, self.board_size, self.turn)
-            if captured:
-                self.turn = "white" if self.turn == "black" else "black"
             if won:
                 self.finish_game("team " + team + " won")
-                
+            if captured:
+                self.turn = "white" if self.turn == "black" else "black"
+                           
             # Wait to read an arrow key
             else:
                 action = self.ui.listener()
@@ -202,9 +197,7 @@ class GameEngine():
                         self.show_menu("home_screen")
         
             self.ui.print_board(self.board, self.turn, msg)
-                
-                
-
+                                
     def show_menu(self, menu_type):
         if menu_type == "home_screen":
             option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
