@@ -1,5 +1,5 @@
 def check_movement(board, board_size, turn):
-    captured = False, "", False
+    captured = False
     for row in range(board_size["height"]):
         for col in range(board_size["width"]):
             if board[row][col].is_piece():
