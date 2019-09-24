@@ -5,7 +5,10 @@ import curses
 
 from ui import UI
 from cell import Cell
+from screens import *
 from rules import check_movement
+
+HOME_SCREEN = ["Local game", "Stats", "Quit"]
 
 
 class GameEngine():
@@ -19,11 +22,7 @@ class GameEngine():
     def __init__(self):
         self.set_up_board()
         self.ui = UI()
-        err = self.ui.print_board(self.board, self.turn)
-        if err != None:
-            self.finish_game(err)
-
-        self.polling()
+        self.show_menu("home_screen")
 
     def set_up_board(self):
         # Initial set up. It can be changed
@@ -36,7 +35,9 @@ class GameEngine():
                         - - - - W - - - -
                         - - - - B - - - -
                         - - - B B B - - -"""
+        self.str2board(str_board)
 
+    def str2board(self, str_board):
         for str_row in str_board.split("\n"):
             row = []
 
@@ -124,7 +125,7 @@ class GameEngine():
 
         # The cell is empty
         if self.board[x][y].team == None:
-            return
+            return ""
 
         if self.board[x][y].team == self.turn:
             # If the current cursor position has a piece
@@ -156,9 +157,6 @@ class GameEngine():
         msg = ""
         action = None
         while True:
-            # We store the board in case of invalid movement
-            old_board = self.board  # TODO redundant after new rules commit?
-
             # Wait to read an arrow key
             action = self.ui.listener()
 
@@ -182,14 +180,13 @@ class GameEngine():
                 self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
 
             if action == "space":
-                # TODO if user clicks in empty cell, "None" is visible
                 if len(self.possible_targets_coords) == 0:
                     msg = self.no_piece_selected(x, y)
                 else:
                     msg = self.one_piece_selected(x, y)
 
             if action == "exit":
-                self.finish_game("FINISH")
+                self.show_menu("home_screen")
 
             won, team = check_movement(self.board, self.board_size)
 
@@ -199,3 +196,14 @@ class GameEngine():
                 self.finish_game(f"Team {team} won!")
 
             self.ui.print_board(self.board, self.turn, msg)
+
+    def show_menu(self, menu_type):
+        if menu_type == "home_screen":
+            option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
+            if option_selected == HOME_SCREEN[0]:
+                err = self.ui.print_board(self.board, self.turn)
+                if err != None:
+                    self.finish_game(err)
+                self.polling()
+            elif option_selected == HOME_SCREEN[2]:
+                self.finish_game("Bye!")

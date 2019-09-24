@@ -72,22 +72,20 @@ class UI:
 
         ch = chr(ch).lower()
 
-        action = None
-
         if ch == self.keys["up"]:
-            action = "up"
+            return "up"
         elif ch == self.keys["down"]:
-            action = "down"
+            return "down"
         elif ch == self.keys["left"]:
-            action = "left"
+            return "left"
         elif ch == self.keys["right"]:
-            action = "right"
+            return "right"
         elif ch == self.keys["space"]:
-            action = "space"
+            return "space"
         elif ch == self.keys["exit"]:
-            action = "exit"
+            return "exit"
 
-        return action
+        return None
 
     def print_board(self, board, turn, msg=""):
         # Empty the board before creating the new one
