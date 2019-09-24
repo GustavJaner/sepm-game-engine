@@ -18,6 +18,9 @@ class GameEngine():
     possible_targets_coords = []
     piece_to_move = None
     turn = "white"
+    turns_left = 200
+    white_score = 0
+    black_score = 0
 
     def __init__(self):
         self.set_up_board()
@@ -115,7 +118,7 @@ class GameEngine():
             for c in r:
                 c.set_possible_target(False)
 
-    def finish_game(self, msg):
+    def finish_game(self, msg=""):
         curses.endwin()
         print(msg)
         sys.exit()
@@ -144,7 +147,11 @@ class GameEngine():
             # We move the piece if the cursor coords is in one of the targets
             if (x, y) in self.possible_targets_coords:
                 self.move_piece(x, y)
-                self.turn = "white" if self.turn == "black" else "black"
+                self.turns_left = self.turns_left-1
+                if (self.turns_left == 0):
+                    self.finish_game()
+                else:
+                    self.turn = "white" if self.turn == "black" else "black"
             # If the cursor is the same as the selected cell, then we cancel the move
             elif self.piece_to_move == (x, y):
                 self.clear_targets()
@@ -195,13 +202,13 @@ class GameEngine():
                 # TODO start new game
                 self.finish_game(f"Team {team} won!")
 
-            self.ui.print_board(self.board, self.turn, msg)
+            self.ui.print_board(self.board, self.turn, self.turns_left, msg)
 
     def show_menu(self, menu_type):
         if menu_type == "home_screen":
             option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
             if option_selected == HOME_SCREEN[0]:
-                err = self.ui.print_board(self.board, self.turn)
+                err = self.ui.print_board(self.board, self.turn, self.turns_left)
                 if err != None:
                     self.finish_game(err)
                 self.polling()
