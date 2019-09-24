@@ -17,7 +17,7 @@ class GameEngine():
     board_size = {"width": -1, "height": -1}
     possible_targets_coords = []
     piece_to_move = None
-    turn = "white"
+    turn = 1
 
     def __init__(self):
         self.set_up_board()
@@ -127,7 +127,7 @@ class GameEngine():
         if self.board[x][y].team == None:
             return ""
 
-        if self.board[x][y].team == self.turn:
+        if self.board[x][y].team == "white" and self.turn == 1 or self.board[x][y].team == "black" and self.turn == 2:
             # If the current cursor position has a piece
             if self.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
                 self.evaluate_possible_target(x, y)
@@ -144,7 +144,7 @@ class GameEngine():
             # We move the piece if the cursor coords is in one of the targets
             if (x, y) in self.possible_targets_coords:
                 self.move_piece(x, y)
-                self.turn = "white" if self.turn == "black" else "black"
+                self.turn = 1 if self.turn == 2 else 2
             # If the cursor is the same as the selected cell, then we cancel the move
             elif self.piece_to_move == (x, y):
                 self.clear_targets()
@@ -193,15 +193,19 @@ class GameEngine():
             if (won):
                 # TODO keep the score of who won, increment the score here ++
                 # TODO start new game
-                self.finish_game(f"Team {team} won!")
+                winner = self.player1 if team == "white" else self.player2
+                self.finish_game(f"{winner} won!")
 
-            self.ui.print_board(self.board, self.turn, msg)
+            player_turn = self.player1 if self.turn == 1 else self.player2
+            self.ui.print_board(self.board, player_turn, msg)
 
     def show_menu(self, menu_type):
         if menu_type == "home_screen":
             option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
             if option_selected == HOME_SCREEN[0]:
-                err = self.ui.print_board(self.board, self.turn)
+                self.player1, self.player2 = set_local_game_screen(self.ui.win)
+
+                err = self.ui.print_board(self.board, self.player1)
                 if err != None:
                     self.finish_game(err)
                 self.polling()
