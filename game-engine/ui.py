@@ -110,6 +110,7 @@ class UI:
                     ncolumns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
 
         self.win.clear()
+        curses.curs_set(0)
         self.win.scrollok(1)
         self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
@@ -123,5 +124,5 @@ class UI:
         second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
             50) + f"Player 2: {player2}"
         third_line = "\n\tOpen menu: Q".ljust(
-            50) + f"Tie: {tie}"
+            50) + f"Tie: {tie}\n\n"
         self.win.addstr(first_line + second_line + third_line)

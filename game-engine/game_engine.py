@@ -205,5 +205,5 @@ class GameEngine():
                 if err != None:
                     self.finish_game(err)
                 self.polling()
-            elif option_selected == HOME_SCREEN[2]:
+            elif option_selected == HOME_SCREEN[1]:
                 self.finish_game("Bye!")
