@@ -8,7 +8,7 @@ from cell import Cell
 from screens import *
 from rules import check_movement
 
-HOME_SCREEN = ["Local game", "Stats", "Quit"]
+HOME_SCREEN = ["Local game", "Quit"]
 
 
 class GameEngine():
