@@ -20,4 +20,3 @@ feature branch -> master-staging -> master
 
 ### Start the game engine
 `python3 game-engine/main.py`
-
