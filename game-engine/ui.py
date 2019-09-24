@@ -39,7 +39,7 @@ class UI:
     def print_bar(self, ncolumns, horizontal_wall, left_wall, middle_wall, right_wall):
         str_bar = left_wall
 
-        horizontal_wall *= 3
+        horizontal_wall *= 7
         str_bar += f"{horizontal_wall}{middle_wall}" * (ncolumns - 1)
         str_bar += f"{horizontal_wall}"
 
@@ -58,12 +58,12 @@ class UI:
 
             if (i, j) == self.cursor_pos:
                 if char_to_print == " ":
-                    str_row += f"█-█{vertical_wall}"
+                    str_row += f"  █-█  {vertical_wall}"
                 else:
-                    str_row += f"█{char_to_print}█{vertical_wall}"
+                    str_row += f"  █{char_to_print}█  {vertical_wall}"
 
             else:
-                str_row += f" {char_to_print} {vertical_wall}"
+                str_row += f"   {char_to_print}   {vertical_wall}"
 
         self.board_str += str_row + "\n\t"
 
@@ -101,7 +101,11 @@ class UI:
             ncolumns, self.walls["h"], self.walls["tl"], self.walls["t0"], self.walls["tr"])
 
         for i, row in enumerate(board):
+            self.print_bar(
+                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             self.print_row(row, i)
+            self.print_bar(
+                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             if i != len(board) - 1:
                 self.print_bar(
                     ncolumns, self.walls["h"], self.walls["t240"], self.walls["cross"], self.walls["t90"])
