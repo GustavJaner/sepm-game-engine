@@ -20,6 +20,7 @@ class GameEngine():
     turns_left = 200
     white_score = 0
     black_score = 0
+    tie = 0
 
     def __init__(self):
         self.set_up_board()
@@ -167,15 +168,22 @@ class GameEngine():
                 won, team, captured = check_movement(
                     self.board, self.board_size, self.turn)
                 if won:
+                    if team == "white":
+                        self.white_score += 1
+                    else:
+                        self.black_score += 1
                     winner = self.player1 if team == "white" else self.player2
                     self.winning_menu(
-                        self.player1, self.player2, winner, team, 10, 5, 8)
+                        self.player1, self.player2, winner, team, self.white_score, self.black_score, self.tie)
 
                 self.turns_left = self.turns_left-1
                 if (self.turns_left == 0):
+                    self.tie += 1
                     self.winning_menu(
-                        self.player1, self.player2, "tie", team, 10, 5, 8)
+                        self.player1, self.player2, "tie", team, self.white_score, self.black_score, self.tie)
 
+                self.turns_left -= 1
+                
                 self.turn = 1 if self.turn == 2 else 2
 
             # If the cursor is the same as the selected cell, then we cancel the move
@@ -243,12 +251,13 @@ class GameEngine():
                 winner = self.player1 if team == "white" else self.player2
 
                 self.winning_menu(self.player1, self.player2,
-                                  winner, team, 10, 5, 8)
+                                  winner, team, self.white_score, self.black_score, self.tie)
 
             player_turn = self.player1 if self.turn == 1 else self.player2
             color_turn = "white" if self.turn == 1 else "black"
             self.ui.print_board(self.board, player_turn,
-                                self.turns_left, color_turn, msg)
+                                self.turns_left, color_turn,
+                                self.white_score, self.black_score, self.tie, msg)
 
     def show_menu(self, menu_type):
         if menu_type == "home_screen":
@@ -256,7 +265,8 @@ class GameEngine():
             if option_selected == HOME_SCREEN[0]:
                 self.player1, self.player2 = set_local_game_screen(self.ui.win)
                 err = self.ui.print_board(
-                    self.board, self.player1, self.turns_left, "white")
+                    self.board, self.player1, self.turns_left,
+                    self.white_score, self.black_score, self.tie, "white")
                 if err != None:
                     self.finish_game(err)
                 self.polling()
