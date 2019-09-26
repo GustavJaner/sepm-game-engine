@@ -87,7 +87,7 @@ class UI:
 
         return None
 
-    def print_board(self, board, turn, turns_left, msg=""):
+    def print_board(self, board, turn, turns_left, team, msg=""):
         # Empty the board before creating the new one
         self.board_str = "\t"
 
@@ -116,7 +116,7 @@ class UI:
         self.win.clear()
         curses.curs_set(0)
         self.win.scrollok(1)
-        self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
+        self.win.addstr(f"\n\tTurn: {turn} | {team}\t{msg}\n")
         self.win.addstr(self.board_str)
         self.win.addstr(f"Turns left: {turns_left}")
 
@@ -129,5 +129,5 @@ class UI:
         second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
             50) + f"Player 2: {player2}"
         third_line = "\n\tOpen menu: Q".ljust(
-            50) + f"Tie: {tie}\n\n"
+            50) + f"Tie: {tie}"
         self.win.addstr(first_line + second_line + third_line)

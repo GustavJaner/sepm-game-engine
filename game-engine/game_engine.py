@@ -8,6 +8,7 @@ from rules import check_movement
 
 HOME_SCREEN = ["Local game", "Quit"]
 
+
 class GameEngine():
     board = []
     ui = None
@@ -73,7 +74,7 @@ class GameEngine():
         # It checks from the piece to the left
         for x2 in range(x-1, -1, -1):
             if not self.board[x2][y].is_piece() and not self.is_middle(x2, y):
-                if self.turn=="black" and self.board[x2][y].corner:
+                if self.turn == "black" and self.board[x2][y].corner:
                     break
                 self.board[x2][y].set_possible_target(True)
                 self.possible_targets_coords.append((x2, y))
@@ -83,7 +84,7 @@ class GameEngine():
         # It checks from the piece to the right
         for x2 in range(x+1, self.board_size["width"]):
             if not self.board[x2][y].is_piece() and not self.is_middle(x2, y):
-                if self.turn=="black" and self.board[x2][y].corner:
+                if self.turn == "black" and self.board[x2][y].corner:
                     break
                 self.board[x2][y].set_possible_target(True)
                 self.possible_targets_coords.append((x2, y))
@@ -93,7 +94,7 @@ class GameEngine():
         # It checks from the piece to the top
         for y2 in range(y-1, -1, -1):
             if not self.board[x][y2].is_piece() and not self.is_middle(x, y2):
-                if self.turn=="black" and self.board[x][y2].corner:
+                if self.turn == "black" and self.board[x][y2].corner:
                     break
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
@@ -103,7 +104,7 @@ class GameEngine():
         # It checks from the piece to the bottom
         for y2 in range(y+1, self.board_size["height"]):
             if not self.board[x][y2].is_piece() and not self.is_middle(x, y2):
-                if self.turn=="black" and self.board[x][y2].corner:
+                if self.turn == "black" and self.board[x][y2].corner:
                     break
                 self.board[x][y2].set_possible_target(True)
                 self.possible_targets_coords.append((x, y2))
@@ -161,7 +162,8 @@ class GameEngine():
             # We move the piece if the cursor coords is in one of the targets
             if (x, y) in self.possible_targets_coords:
                 self.move_piece(x, y)
-                won, team, captured = check_movement(self.board, self.board_size, self.turn)
+                won, team, captured = check_movement(
+                    self.board, self.board_size, self.turn)
                 if won:
                     self.finish_game("Team " + team + " won")
 
@@ -170,7 +172,6 @@ class GameEngine():
                     self.finish_game("Tie!")
 
                 self.turn = 1 if self.turn == 2 else 2
-
 
             # If the cursor is the same as the selected cell, then we cancel the move
             elif self.piece_to_move == (x, y):
@@ -183,11 +184,12 @@ class GameEngine():
         msg = ""
         action = None
         while True:
-            won, team, captured = check_movement(self.board, self.board_size, self.turn)
+            won, team, captured = check_movement(
+                self.board, self.board_size, self.turn)
             if won:
                 self.finish_game("team " + team + " won")
             if captured:
-                self.turn = "white" if self.turn == "black" else "black"
+                self.turn = 1 if self.turn == 2 else 1
 
             # Wait to read an arrow key
             else:
@@ -202,7 +204,8 @@ class GameEngine():
 
                     if action == "down":
                         x += 1
-                        self.ui.cursor_pos = (min(x, self.board_size["height"]-1), y)
+                        self.ui.cursor_pos = (
+                            min(x, self.board_size["height"]-1), y)
 
                     if action == "left":
                         y -= 1
@@ -210,7 +213,8 @@ class GameEngine():
 
                     if action == "right":
                         y += 1
-                        self.ui.cursor_pos = (x, min(y, self.board_size["width"]-1))
+                        self.ui.cursor_pos = (
+                            x, min(y, self.board_size["width"]-1))
 
                     if action == "space":
                         if len(self.possible_targets_coords) == 0:
@@ -227,14 +231,17 @@ class GameEngine():
                 self.finish_game(f"{winner} won!")
 
             player_turn = self.player1 if self.turn == 1 else self.player2
-            self.ui.print_board(self.board, player_turn, self.turns_left, msg)
+            color_turn = "white" if self.turn == 1 else "black"
+            self.ui.print_board(self.board, player_turn,
+                                self.turns_left, color_turn, msg)
 
     def show_menu(self, menu_type):
         if menu_type == "home_screen":
             option_selected = set_home_screen(self.ui.win, HOME_SCREEN)
             if option_selected == HOME_SCREEN[0]:
                 self.player1, self.player2 = set_local_game_screen(self.ui.win)
-                err = self.ui.print_board(self.board, self.player1, self.turns_left)
+                err = self.ui.print_board(
+                    self.board, self.player1, self.turns_left, "white")
                 if err != None:
                     self.finish_game(err)
                 self.polling()
