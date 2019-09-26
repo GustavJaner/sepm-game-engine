@@ -39,7 +39,7 @@ class UI:
     def print_bar(self, ncolumns, horizontal_wall, left_wall, middle_wall, right_wall):
         str_bar = left_wall
 
-        horizontal_wall *= 3
+        horizontal_wall *= 7
         str_bar += f"{horizontal_wall}{middle_wall}" * (ncolumns - 1)
         str_bar += f"{horizontal_wall}"
 
@@ -58,12 +58,12 @@ class UI:
 
             if (i, j) == self.cursor_pos:
                 if char_to_print == " ":
-                    str_row += f"█-█{vertical_wall}"
+                    str_row += f"  █-█  {vertical_wall}"
                 else:
-                    str_row += f"█{char_to_print}█{vertical_wall}"
+                    str_row += f"  █{char_to_print}█  {vertical_wall}"
 
             else:
-                str_row += f" {char_to_print} {vertical_wall}"
+                str_row += f"   {char_to_print}   {vertical_wall}"
 
         self.board_str += str_row + "\n\t"
 
@@ -87,7 +87,7 @@ class UI:
 
         return None
 
-    def print_board(self, board, turn, msg=""):
+    def print_board(self, board, turn, turns_left, msg=""):
         # Empty the board before creating the new one
         self.board_str = "\t"
 
@@ -101,7 +101,11 @@ class UI:
             ncolumns, self.walls["h"], self.walls["tl"], self.walls["t0"], self.walls["tr"])
 
         for i, row in enumerate(board):
+            self.print_bar(
+                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             self.print_row(row, i)
+            self.print_bar(
+                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             if i != len(board) - 1:
                 self.print_bar(
                     ncolumns, self.walls["h"], self.walls["t240"], self.walls["cross"], self.walls["t90"])
@@ -110,11 +114,20 @@ class UI:
                     ncolumns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
 
         self.win.clear()
+        curses.curs_set(0)
         self.win.scrollok(1)
         self.win.addstr(f"\n\tTurn: {turn}\t{msg}\n")
         self.win.addstr(self.board_str)
+        self.win.addstr(f"Turns left: {turns_left}")
 
         # List showing the options
-        self.win.addstr("\n\n\tMove cursor: WASD")
-        self.win.addstr("\n\tSelect / Deselect / Move piece: space")
-        self.win.addstr("\n\tFor finish the game: Q\n")
+        player1 = 11
+        player2 = 8
+        tie = 3
+        first_line = "\n\n\tMove cursor: WASD".ljust(
+            51) + f"Player 1: {player1}"
+        second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
+            50) + f"Player 2: {player2}"
+        third_line = "\n\tOpen menu: Q".ljust(
+            50) + f"Tie: {tie}\n\n"
+        self.win.addstr(first_line + second_line + third_line)
