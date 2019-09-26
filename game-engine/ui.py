@@ -87,7 +87,7 @@ class UI:
 
         return None
 
-    def print_board(self, board, turn, turns_left, team, msg=""):
+    def print_board(self, board, turn, turns_left, team, white_score, black_score, tie, msg=""):
         # Empty the board before creating the new one
         self.board_str = "\t"
 
@@ -121,13 +121,10 @@ class UI:
         self.win.addstr(f"Turns left: {turns_left}")
 
         # List showing the options
-        player1 = 11
-        player2 = 8
-        tie = 3
         first_line = "\n\n\tMove cursor: WASD".ljust(
-            51) + f"Player 1: {player1}"
+            51) + f"Player 1: {white_score}"
         second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
-            50) + f"Player 2: {player2}"
+            50) + f"Player 2: {black_score}"
         third_line = "\n\tOpen menu: Q".ljust(
             50) + f"Tie: {tie}"
         self.win.addstr(first_line + second_line + third_line)
