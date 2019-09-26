@@ -107,3 +107,61 @@ def set_local_game_screen(win):
                 player1 += chr(ch)
             if len(player2) < 50 and selected == 2:
                 player2 += chr(ch)
+
+
+def winning_menu(win, options, wp_name, bp_name, winner, winner_team, n_whites, n_blacks, n_ties):
+    current_selected = 0
+
+    while True:
+        curses.curs_set(0)
+        win.clear()
+
+        if winner != "tie":
+            win.addstr(
+                f"\n\n\n\tOH YEAH! {winner} ({winner_team}) won!\n\n")
+        else:
+            win.addstr(
+                f"\n\n\n\t:( Too much movements! This game is a tie.\n\n")
+
+        for i, option in enumerate(options):
+            win.addstr("\n\t\t")
+            if i == current_selected:
+                win.addstr("> ")
+            else:
+                win.addstr("  ")
+
+            win.addstr(option + "\n")
+
+        first_line = f"{wp_name} (white):"
+        second_line = f"{bp_name} (black):"
+        third_line = "Tie:"
+        strlen = max(len(first_line), len(bp_name), len(third_line)) + 3
+
+        first_line = first_line.ljust(strlen, " ") + str(n_whites) + "\n"
+        second_line = second_line.ljust(strlen, " ") + str(n_blacks) + "\n"
+        third_line = third_line.ljust(strlen, " ") + str(n_ties) + "\n"
+
+        win.addstr("\n\n\n")
+        win.addstr("\t\t" + first_line)
+        win.addstr("\t\t" + second_line)
+        win.addstr("\t\t" + third_line)
+
+        ch = win.getch()
+        ch = chr(ch).lower()
+
+        if ch == "w":
+            if current_selected == 0:
+                current_selected = len(options) - 1
+            else:
+                current_selected -= 1
+        elif ch == "s":
+            if current_selected == len(options) - 1:
+                current_selected = 0
+            else:
+                current_selected += 1
+        elif ch == " ":
+            return options[current_selected]
+
+        curses.curs_set(0)
+
+        win.clear()
