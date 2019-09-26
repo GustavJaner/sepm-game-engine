@@ -90,7 +90,11 @@ def set_local_game_screen(win):
 
         # Delete key
         if ch == 127:
-            player1 = player1[:-1]
+            if selected == 1:
+                player1 = player1[:-1]
+            elif selected == 2:
+                player2 = player2[:-1]
+
         # New line
         elif ch == 10:
             if selected == 1 and player1 != "":
