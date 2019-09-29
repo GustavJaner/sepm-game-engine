@@ -7,6 +7,7 @@ from screens import *
 from rules import check_movement
 
 HOME_SCREEN = ["Local game", "Quit"]
+END_OF_ROUND_SCREEN = ["Play again", "Quit"]
 
 
 class GameEngine():
@@ -37,6 +38,7 @@ class GameEngine():
                         - - - - W - - - -
                         - - - - B - - - -
                         + - - B B B - - +"""
+        self.board = []
         self.str2board(str_board)
 
     def str2board(self, str_board):
@@ -170,13 +172,17 @@ class GameEngine():
                         self.white_score += 1
                     else:
                         self.black_score += 1
-
-                    self.finish_game("Team " + team + " won")
+                    winner = self.player1 if team == "white" else self.player2
+                    self.winning_menu(
+                        self.player1, self.player2, winner, team, self.white_score, self.black_score, self.tie)
 
                 self.turns_left = self.turns_left-1
                 if (self.turns_left == 0):
                     self.tie += 1
-                    self.finish_game("Tie!")
+                    self.winning_menu(
+                        self.player1, self.player2, "tie", team, self.white_score, self.black_score, self.tie)
+
+                self.turns_left -= 1
 
                 self.turn = 1 if self.turn == 2 else 2
 
@@ -186,6 +192,14 @@ class GameEngine():
             else:
                 msg = "You can't move to that cell"
         return msg
+
+    def winning_menu(self, wp_name, bp_name, winner, winner_team, n_whites, n_blacks, n_ties):
+        option = winning_menu(self.ui.win, END_OF_ROUND_SCREEN, self.player1, self.player2,
+                              winner, winner_team, n_whites, n_blacks, n_ties)
+        if option == END_OF_ROUND_SCREEN[0]:
+            self.set_up_board()
+        elif option == END_OF_ROUND_SCREEN[1]:
+            self.finish_game("Ok, bye!")
 
     def polling(self):
         msg = ""
@@ -235,7 +249,9 @@ class GameEngine():
                 # TODO keep the score of who won, increment the score here ++
                 # TODO start new game
                 winner = self.player1 if team == "white" else self.player2
-                self.finish_game(f"{winner} won!")
+
+                self.winning_menu(self.player1, self.player2,
+                                  winner, team, self.white_score, self.black_score, self.tie)
 
             player_turn = self.player1 if self.turn == 1 else self.player2
             color_turn = "white" if self.turn == 1 else "black"
@@ -249,8 +265,8 @@ class GameEngine():
             if option_selected == HOME_SCREEN[0]:
                 self.player1, self.player2 = set_local_game_screen(self.ui.win)
                 err = self.ui.print_board(
-                    self.board, self.player1, self.turns_left,
-                    self.white_score, self.black_score, self.tie, "white")
+                    self.board, self.player1, self.turns_left, "white",
+                    self.white_score, self.black_score, self.tie)
                 if err != None:
                     self.finish_game(err)
                 self.polling()
