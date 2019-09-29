@@ -183,7 +183,7 @@ class GameEngine():
                         self.player1, self.player2, "tie", team, self.white_score, self.black_score, self.tie)
 
                 self.turns_left -= 1
-                
+
                 self.turn = 1 if self.turn == 2 else 2
 
             # If the cursor is the same as the selected cell, then we cancel the move
@@ -195,7 +195,7 @@ class GameEngine():
 
     def winning_menu(self, wp_name, bp_name, winner, winner_team, n_whites, n_blacks, n_ties):
         option = winning_menu(self.ui.win, END_OF_ROUND_SCREEN, self.player1, self.player2,
-                              winner, winner_team, 10, 5, 8)
+                              winner, winner_team, n_whites, n_blacks, n_ties)
         if option == END_OF_ROUND_SCREEN[0]:
             self.set_up_board()
         elif option == END_OF_ROUND_SCREEN[1]:
@@ -265,8 +265,8 @@ class GameEngine():
             if option_selected == HOME_SCREEN[0]:
                 self.player1, self.player2 = set_local_game_screen(self.ui.win)
                 err = self.ui.print_board(
-                    self.board, self.player1, self.turns_left,
-                    self.white_score, self.black_score, self.tie, "white")
+                    self.board, self.player1, self.turns_left, "white",
+                    self.white_score, self.black_score, self.tie)
                 if err != None:
                     self.finish_game(err)
                 self.polling()
