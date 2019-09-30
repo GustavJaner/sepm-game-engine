@@ -6,11 +6,11 @@ import platform
 import curses
 
 
-class UI:
+class BoardUI:
     board_str = ""
     cursor_pos = (0, 0)
 
-    def __init__(self):
+    def __init__(self, screen_api):
         self.walls = {
             "v": "\u2502",  # │
             "h": "\u2500",  # ─
@@ -31,16 +31,16 @@ class UI:
             "left": "a",
             "right": "d",
             "space": " ",
-            "exit": "q"
+            "pause": "q"
         }
 
-        self.win = curses.initscr()
+        self.screen_api = screen_api
 
-    def print_bar(self, ncolumns, horizontal_wall, left_wall, middle_wall, right_wall):
+    def print_bar(self, n_columns, horizontal_wall, left_wall, middle_wall, right_wall):
         str_bar = left_wall
 
         horizontal_wall *= 7
-        str_bar += f"{horizontal_wall}{middle_wall}" * (ncolumns - 1)
+        str_bar += f"{horizontal_wall}{middle_wall}" * (n_columns - 1)
         str_bar += f"{horizontal_wall}"
 
         str_bar += right_wall
@@ -67,8 +67,8 @@ class UI:
 
         self.board_str += str_row + "\n\t"
 
-    def listener(self):
-        ch = self.win.getch()
+    def key_listener(self):
+        ch = self.screen_api.getch()
 
         ch = chr(ch).lower()
 
@@ -82,49 +82,52 @@ class UI:
             return "right"
         elif ch == self.keys["space"]:
             return "space"
-        elif ch == self.keys["exit"]:
-            return "exit"
+        elif ch == self.keys["pause"]:
+            return "pause"
 
         return None
 
-    def print_board(self, board, turn, turns_left, team, white_score, black_score, tie, msg=""):
+    def print_board(self, data):
         # Empty the board before creating the new one
         self.board_str = "\t"
 
         # Get the length of the first row.
-        if len(set(map(len, board))) not in (0, 1):
+        if len(set(map(len, data.board))) not in (0, 1):
             return "The length of the rows in the board is not the same"
-        ncolumns = len(board[0])
+        n_columns = len(data.board[0])
 
         # Set the top bar
         self.print_bar(
-            ncolumns, self.walls["h"], self.walls["tl"], self.walls["t0"], self.walls["tr"])
+            n_columns, self.walls["h"], self.walls["tl"], self.walls["t0"], self.walls["tr"])
 
-        for i, row in enumerate(board):
+        for i, row in enumerate(data.board):
             self.print_bar(
-                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
+                n_columns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             self.print_row(row, i)
             self.print_bar(
-                ncolumns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
-            if i != len(board) - 1:
+                n_columns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
+            if i != len(data.board) - 1:
                 self.print_bar(
-                    ncolumns, self.walls["h"], self.walls["t240"], self.walls["cross"], self.walls["t90"])
+                    n_columns, self.walls["h"], self.walls["t240"], self.walls["cross"], self.walls["t90"])
             else:
                 self.print_bar(
-                    ncolumns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
+                    n_columns, self.walls["h"], self.walls["bl"], self.walls["t180"], self.walls["br"])
 
-        self.win.clear()
+        self.screen_api.clear()
         curses.curs_set(0)
-        self.win.scrollok(1)
-        self.win.addstr(f"\n\tTurn: {turn} | {team}\t{msg}\n")
-        self.win.addstr(self.board_str)
-        self.win.addstr(f"Turns left: {turns_left}")
+        self.screen_api.scrollok(1)
+
+        name = data.players[0].name if data.players[0].team == data.turn else data.players[1].name
+        self.screen_api.addstr(f"\n\tTurn: {name} | {data.turn}\t{data.msg}\n")
+        self.screen_api.addstr(self.board_str)
+        self.screen_api.addstr(f"Turns left: {data.turns_left}")
 
         # List showing the options
         first_line = "\n\n\tMove cursor: WASD".ljust(
-            51) + f"Player 1: {white_score}"
+            51) + f"Player 1: {data.players[0].n_wins}"
         second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
-            50) + f"Player 2: {black_score}"
+            50) + f"Player 2: {data.players[1].n_wins}"
         third_line = "\n\tOpen menu: Q".ljust(
-            50) + f"Tie: {tie}"
-        self.win.addstr(first_line + second_line + third_line)
+            50) + f"Tie: {data.n_times_played - data.players[0].n_wins - data.players[1].n_wins}"
+
+        self.screen_api.addstr(first_line + second_line + third_line)
