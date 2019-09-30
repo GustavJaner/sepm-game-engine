@@ -1,7 +1,6 @@
 from screens.local_game import show_local_game_screen
 from game_platform.game_platform import GamePlatform
 from modes.player import Player
-from modes.info import Info
 from game_platform.data import Data
 
 
@@ -18,7 +17,7 @@ class LocalGame():
         n_times_played = 0
 
         # Initial set up. It can be changed
-        str_board = """ + - - - B - - - +
+        str_board = """ + - - B B B - - +
                         - - - - B - - - -
                         - - - - W - - - -
                         B - - - W - - - B
