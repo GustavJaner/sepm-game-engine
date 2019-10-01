@@ -1,5 +1,6 @@
 import sys
 import curses
+import time
 
 from board.board_ui import BoardUI
 from game_platform.piece import Piece
@@ -89,7 +90,7 @@ class GamePlatform():
 
         # avoid set the king in the same spot where he started
         if self.data.board[x][y].role == "king" and self.data.initial_king_coords in self.possible_targets_coords:
-            (xo, yo) = self.data.initial_king_coords
+            xo, yo = self.data.initial_king_coords
             self.data.board[xo][yo].set_possible_target(False)
             self.possible_targets_coords.remove(self.data.initial_king_coords)
 
@@ -97,11 +98,27 @@ class GamePlatform():
             self.piece_to_move = (x, y)
 
     def move_piece(self, dest_x, dest_y):
-        orig_x, orig_y = self.piece_to_move[0], self.piece_to_move[1]
-        destination = self.data.board[dest_x][dest_y]
-        self.data.board[dest_x][dest_y] = self.data.board[orig_x][orig_y]
-        self.data.board[orig_x][orig_y] = destination
+        orig_x, orig_y = self.piece_to_move
+        team = self.data.board[orig_x][orig_y].team
+        role = self.data.board[orig_x][orig_y].role
+
+        if orig_x < dest_x:
+            rang = [(x, dest_y) for x in range(orig_x, dest_x+1)]
+        elif orig_x > dest_x:
+            rang = [(x, dest_y) for x in range(orig_x, dest_x-1, -1)]
+        elif orig_y < dest_y:
+            rang = [(dest_x, y) for y in range(orig_y, dest_y+1)]
+        elif orig_y > dest_y:
+            rang = [(dest_x, y) for y in range(orig_y, dest_y-1, -1)]
+
         self.clear_targets()
+
+        for (x1, y1), (x2, y2) in zip(rang[:-1], rang[1:]):
+            self.data.board[x1][y1].remove_marker()
+            self.data.board[x2][y2].set_marker(role, team)
+            self.screen_api.refresh()
+            self.data.board_ui.print_board(self.data)
+            time.sleep(0.1)
 
     def clear_targets(self):
         self.piece_to_move = None

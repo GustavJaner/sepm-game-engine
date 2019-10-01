@@ -28,3 +28,7 @@ class Piece():
     def remove_marker(self):
         self.role = None
         self.team = None
+
+    def set_marker(self, role, team):
+        self.role = role
+        self.team = team
