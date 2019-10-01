@@ -26,15 +26,6 @@ class LocalGame():
                         - - - - W - - - -
                         - - - - B - - - -
                         + - - B B B - - +"""
-        str_board = """ + - - B B B - - +
-                        - - - - B - - - -
-                        - - - W K - - - -
-                        B - - - - - - - B
-                        B B W W - W W B B
-                        B - - - W - - - B
-                        - - - - W - - - -
-                        - - - - B - - - -
-                        + - - B B B - - +"""
 
         while True:
 
