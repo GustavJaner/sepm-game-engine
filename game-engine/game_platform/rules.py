@@ -1,16 +1,16 @@
 def check_movement(data):
     captured = False
-    for row in range(data.board_size["height"]):
-        for col in range(data.board_size["width"]):
-            if data.board[row][col].is_piece():
-                if data.board[row][col].team != data.turn:  # <- maybe useless
-                    if data.board[row][col].role != "king":
-                        if check_captured_marker(data.board, data.board_size, row, col):
+    for row in range(data.board.size["height"]):
+        for col in range(data.board.size["width"]):
+            if data.board.pieces[row][col].is_piece():
+                if data.board.pieces[row][col].team != data.turn:  # <- maybe useless
+                    if data.board.pieces[row][col].role != "king":
+                        if check_captured_marker(data.board.pieces, data.board.size, row, col):
                             captured = True
                     else:
-                        if check_king_escape(data.board, data.board_size, row, col):
+                        if check_king_escape(data.board.pieces, data.board.size, row, col):
                             return True, "white", False
-                        if check_captured_king(data.board, data.board_size, row, col):
+                        if check_captured_king(data.board.pieces, data.board.size, row, col):
                             return True, "black", False
 
     # return false as long as no player has won
@@ -43,7 +43,7 @@ def check_captured_marker(board, board_size, row, col):
 def check_captured_king(board, board_size, row, col):
     team = "white"
     sides = ["wall"] * 4  # [TOP, RIGHT, BOTTOM, LEFT]
-    
+
     if row-1 >= 0:
         sides[0] = board[row - 1][col].team
 

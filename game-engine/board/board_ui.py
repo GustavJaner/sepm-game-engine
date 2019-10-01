@@ -92,21 +92,21 @@ class BoardUI:
         self.board_str = "\t"
 
         # Get the length of the first row.
-        if len(set(map(len, data.board))) not in (0, 1):
+        if len(set(map(len, data.board.pieces))) not in (0, 1):
             return "The length of the rows in the board is not the same"
-        n_columns = len(data.board[0])
+        n_columns = len(data.board.pieces[0])
 
         # Set the top bar
         self.print_bar(
             n_columns, self.walls["h"], self.walls["tl"], self.walls["t0"], self.walls["tr"])
 
-        for i, row in enumerate(data.board):
+        for i, row in enumerate(data.board.pieces):
             self.print_bar(
                 n_columns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
             self.print_row(row, i)
             self.print_bar(
                 n_columns, " ", self.walls["v"], self.walls["v"], self.walls["v"])
-            if i != len(data.board) - 1:
+            if i != len(data.board.pieces) - 1:
                 self.print_bar(
                     n_columns, self.walls["h"], self.walls["t240"], self.walls["cross"], self.walls["t90"])
             else:

@@ -1,9 +1,8 @@
 import sys
 import curses
-import time
 
 from board.board_ui import BoardUI
-from game_platform.piece import Piece
+from game_platform.board import Board
 from game_platform.rules import check_movement
 
 from screens import *
@@ -11,134 +10,31 @@ from screens import *
 
 class GamePlatform():
     possible_targets_coords = []
-    piece_to_move = None
     event = None
 
     def __init__(self, screen_api, data, str_board):
         self.screen_api = screen_api
 
         self.data = data
-        self.data.set_board(self.str2board(str_board))
+        self.data.set_board(Board(str_board))
         self.data.board_ui = BoardUI(screen_api)
 
-        # maybe return
         self.polling()
-
-    def str2board(self, str_board):
-        board = []
-
-        for str_row in str_board.split("\n"):
-            row = []
-
-            for piece in str_row.strip().split(" "):
-                team = None
-                role = None
-                corner = False
-
-                if piece == "B":
-                    team = "black"
-                elif piece == "W" or piece == "K":
-                    team = "white"
-
-                if piece == "K":
-                    role = "king"
-                    corner = True
-
-                elif piece == "B" or piece == "W":
-                    role = "marker"
-
-                if piece == "+":
-                    corner = True
-
-                p = Piece(team, role, corner)
-                row.append(p)
-
-            board.append(row)
-        return board
-
-    def check_cell(self, x, y):
-        if not self.data.board[x][y].is_piece():
-            if self.data.turn == "black" and self.data.board[x][y].corner:
-                return True
-            self.data.board[x][y].set_possible_target(True)
-            self.possible_targets_coords.append((x, y))
-        else:
-            return True
-
-    def evaluate_possible_target(self, x, y):
-        self.possible_targets_coords = []
-
-        # It checks from the piece to the left
-        for y2 in range(y-1, -1, -1):
-            if self.check_cell(x, y2):
-                break
-
-        # It checks from the piece to the right
-        for y2 in range(y+1, self.data.board_size["width"]):
-            if self.check_cell(x, y2):
-                break
-
-        # It checks from the piece to the top
-        for x2 in range(x-1, -1, -1):
-            if self.check_cell(x2, y):
-                break
-
-        # It checks from the piece to the bottom
-        for x2 in range(x+1, self.data.board_size["height"]):
-            if self.check_cell(x2, y):
-                break
-
-        # avoid set the king in the same spot where he started
-        if self.data.board[x][y].role == "king" and self.data.initial_king_coords in self.possible_targets_coords:
-            xo, yo = self.data.initial_king_coords
-            self.data.board[xo][yo].set_possible_target(False)
-            self.possible_targets_coords.remove(self.data.initial_king_coords)
-
-        if len(self.possible_targets_coords) != 0:
-            self.piece_to_move = (x, y)
-
-    def move_piece(self, dest_x, dest_y):
-        orig_x, orig_y = self.piece_to_move
-        team = self.data.board[orig_x][orig_y].team
-        role = self.data.board[orig_x][orig_y].role
-
-        if orig_x < dest_x:
-            rang = [(x, dest_y) for x in range(orig_x, dest_x+1)]
-        elif orig_x > dest_x:
-            rang = [(x, dest_y) for x in range(orig_x, dest_x-1, -1)]
-        elif orig_y < dest_y:
-            rang = [(dest_x, y) for y in range(orig_y, dest_y+1)]
-        elif orig_y > dest_y:
-            rang = [(dest_x, y) for y in range(orig_y, dest_y-1, -1)]
-
-        self.clear_targets()
-
-        for (x1, y1), (x2, y2) in zip(rang[:-1], rang[1:]):
-            self.data.board[x1][y1].remove_marker()
-            self.data.board[x2][y2].set_marker(role, team)
-            self.screen_api.refresh()
-            self.data.board_ui.print_board(self.data)
-            time.sleep(0.1)
-
-    def clear_targets(self):
-        self.piece_to_move = None
-        self.possible_targets_coords = []
-        for r in self.data.board:
-            for c in r:
-                c.set_possible_target(False)
 
     def no_piece_selected(self, x, y):
 
         # The cell is empty
-        if self.data.board[x][y].team == None:
+        if self.data.board.pieces[x][y].team == None:
             return
 
-        if self.data.board[x][y].team == "white" and self.data.turn == "white" or self.data.board[x][y].team == "black" and self.data.turn == "black":
+        if self.data.board.pieces[x][y].team == "white" and self.data.turn == "white" or self.data.board.pieces[x][y].team == "black" and self.data.turn == "black":
             # If the current cursor position has a piece
-            if self.data.board[x][y].is_piece() and len(self.possible_targets_coords) == 0:
-                self.evaluate_possible_target(x, y)
-                if len(self.possible_targets_coords) == 0:
+            if self.data.board.pieces[x][y].is_piece() and len(self.data.board.possible_targets_coords) == 0:
+                self.data.board.evaluate_possible_target(x, y)
+                if len(self.data.board.possible_targets_coords) == 0:
                     self.data.msg = "This piece has not any possible movement"
+                else:
+                    self.data.board.piece_to_move = (x, y)
         else:
             self.data.msg = "You can't move a piece of the other team"
 
@@ -149,8 +45,9 @@ class GamePlatform():
 
     def one_piece_selected(self, x, y):
         # We move the piece if the cursor coords is in one of the targets
-        if (x, y) in self.possible_targets_coords:
-            self.move_piece(x, y)
+        if (x, y) in self.data.board.possible_targets_coords:
+            self.data.board.move_piece(
+                x, y, self.data.board_ui, self.data, self.screen_api)
             won, team, captured = check_movement(self.data)
             self.change_turn()
 
@@ -163,8 +60,8 @@ class GamePlatform():
                 self.event = "tie"
 
         # If the cursor is the same as the selected cell, then we cancel the move
-        elif self.piece_to_move == (x, y):
-            self.clear_targets()
+        elif self.data.board.piece_to_move == (x, y):
+            self.data.board.clear_targets()
         else:
             self.data.msg = "You can't move to that cell"
 
@@ -179,7 +76,7 @@ class GamePlatform():
         if action == "down":
             x += 1
             self.data.board_ui.cursor_pos = (
-                min(x, self.data.board_size["height"]-1), y)
+                min(x, self.data.board.size["height"]-1), y)
 
         if action == "left":
             y -= 1
@@ -188,12 +85,12 @@ class GamePlatform():
         if action == "right":
             y += 1
             self.data.board_ui.cursor_pos = (
-                x, min(y, self.data.board_size["width"] - 1))
+                x, min(y, self.data.board.size["width"] - 1))
 
         if action == "space":
-            if len(self.possible_targets_coords) == 0:
+            if len(self.data.board.possible_targets_coords) == 0:
                 self.no_piece_selected(x, y)
-            elif self.piece_to_move != None:
+            elif self.data.board.piece_to_move != None:
                 self.one_piece_selected(x, y)
 
         if action == "pause":
@@ -233,5 +130,5 @@ class GamePlatform():
             # if (won):
             #    return self.we_have_a_winner(team)
 
-            self.data.board = self.data.board
+            # self.data.board = self.data.board
             self.data.board_ui.print_board(self.data)

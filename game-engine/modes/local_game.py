@@ -30,7 +30,7 @@ class LocalGame():
         while True:
 
             data = Data(player1, player2, "white",
-                        n_times_played, TURNS_IN_A_GAME, "", (4, 4))
+                        n_times_played, TURNS_IN_A_GAME, "")
             game_platform = GamePlatform(screen_api, data, str_board)
 
             if game_platform.event == "pause":
