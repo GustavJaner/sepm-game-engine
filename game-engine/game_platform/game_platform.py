@@ -56,44 +56,43 @@ class GamePlatform():
         return board
 
     def check_cell(self, x, y):
-        # avoid set the king in the same spot where he started
-        if self.data.initial_king_coords == (x, y):
-            return "continue"
 
         if not self.data.board[x][y].is_piece():
             if self.data.turn == "black" and self.data.board[x][y].corner:
-                return "break"
+                return True
             self.data.board[x][y].set_possible_target(True)
             self.possible_targets_coords.append((x, y))
         else:
-            return "break"
+            return True
 
     def evaluate_possible_target(self, x, y):
         self.possible_targets_coords = []
 
         # It checks from the piece to the left
         for y2 in range(y-1, -1, -1):
-            a = self.check_cell(x, y2)
-            if a == "break":
-                continue
+            if self.check_cell(x, y2):
+                break
 
         # It checks from the piece to the right
         for y2 in range(y+1, self.data.board_size["width"]):
-            a = self.check_cell(x, y2)
-            if a == "break":
+            if self.check_cell(x, y2):
                 break
 
         # It checks from the piece to the top
         for x2 in range(x-1, -1, -1):
-            a = self.check_cell(x2, y)
-            if a == "break":
+            if self.check_cell(x2, y):
                 break
 
         # It checks from the piece to the bottom
         for x2 in range(x+1, self.data.board_size["height"]):
-            a = self.check_cell(x2, y)
-            if a == "break":
+            if self.check_cell(x2, y):
                 break
+
+        # avoid set the king in the same spot where he started
+        if self.data.board[x][y].role == "king" and self.data.initial_king_coords in self.possible_targets_coords:
+            (xo, yo) = self.data.initial_king_coords
+            self.data.board[xo][yo].set_possible_target(False)
+            self.possible_targets_coords.remove(self.data.initial_king_coords)
 
         if len(self.possible_targets_coords) != 0:
             self.piece_to_move = (x, y)
