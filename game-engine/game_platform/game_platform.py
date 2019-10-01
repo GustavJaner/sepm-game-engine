@@ -56,7 +56,6 @@ class GamePlatform():
         return board
 
     def check_cell(self, x, y):
-
         if not self.data.board[x][y].is_piece():
             if self.data.turn == "black" and self.data.board[x][y].corner:
                 return True
@@ -208,6 +207,9 @@ class GamePlatform():
                     self.switch_action(action, x, y)
 
                 if self.event != None:
+                    # Something happened:
+                    # 1. User press q to open menu
+                    # 2. The game has finished: one of the player has won or tied
                     break
 
             # Same check in L207
