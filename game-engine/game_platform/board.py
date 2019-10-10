@@ -58,7 +58,7 @@ class Board():
             return True
 
     def evaluate_possible_target(self, x, y):
-        possible_targets_coords = []
+        self.possible_targets_coords = []
 
         # It checks from the piece to the left
         for y2 in range(y-1, -1, -1):
@@ -108,6 +108,12 @@ class Board():
             board_ui.print_board(data)
             screen_api.refresh()
             time.sleep(0.1)
+
+    def move_piece_no_ui(self, orig_x, orig_y, dest_x, dest_y):
+        destination = self.data.board[dest_x][dest_y]
+        self.data.board[dest_x][dest_y] = self.data.board[orig_x][orig_y]
+        self.data.board[orig_x][orig_y] = destination
+        self.clear_targets()
 
     def clear_targets(self):
         self.piece_to_move = None

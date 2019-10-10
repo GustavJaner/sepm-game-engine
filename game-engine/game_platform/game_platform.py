@@ -30,7 +30,8 @@ class GamePlatform():
         if self.data.board.pieces[x][y].team == "white" and self.data.turn == "white" or self.data.board.pieces[x][y].team == "black" and self.data.turn == "black":
             # If the current cursor position has a piece
             if self.data.board.pieces[x][y].is_piece() and len(self.data.board.possible_targets_coords) == 0:
-                self.data.board.evaluate_possible_target(x, y)
+                possible_targets_coords = self.data.board.evaluate_possible_target(
+                    x, y)
                 if len(self.data.board.possible_targets_coords) == 0:
                     self.data.msg = "This piece has not any possible movement"
                 else:
