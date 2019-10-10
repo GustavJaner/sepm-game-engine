@@ -4,7 +4,7 @@ from screens.general import show_home_screen
 import curses
 
 
-HOME_SCREEN = ["Local game", "Quit"]
+HOME_SCREEN = ["Local game", "Tournament", "Quit"]
 
 
 if __name__ == "__main__":
@@ -16,4 +16,8 @@ if __name__ == "__main__":
         LocalGame(screen_api)
 
     elif option == 1:
+        from modes.tournament import Tournament
+        Tournament(screen_api)
+
+    elif option == 2:
         screen_api.clear()
