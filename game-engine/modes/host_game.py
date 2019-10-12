@@ -28,8 +28,8 @@ def hostGame(screen):
     # End and close the online Session
     msg = "q"
     conn.send(str.encode(msg))
-    #socket.shutdown(SHUT_RDWR)
     conn.close() # Close the connection
+    # serv.shutdown('SHUT_RDWR')
     serv.close() # Close the socket and server
 
 

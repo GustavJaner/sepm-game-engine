@@ -23,9 +23,9 @@ def waiting_for_other_player(screen, serv, host_ip):
 
         screen.addstr("\n\n\n\t  ")
         screen.addstr(f"1. Successfully created a new game server with IP address:\n\t     {host_ip}")
-        screen.addstr("\n\t  ")
+        screen.addstr("\n\n\t  ")
         screen.addstr("2. Waiting for another player to join the game..")
-        screen.addstr("\n\t  ")
+        screen.addstr("\n\n\t  ")
         screen.refresh()
 
         conn, addr = serv.accept()

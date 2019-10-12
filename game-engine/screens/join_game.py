@@ -28,14 +28,15 @@ def insert_IP(screen):
         screen.addstr("Play online", curses.A_BOLD)
         screen.refresh()
 
-        screen.addstr(f"\n\n\n\tInsert the IP address of the game you want to join:\n")
+        if selected == 1:
+            screen.addstr(f"\n\n\n\tInsert the IP address of the game you want to join:\n")
 
-        str2print = ip.ljust(50, "_")
+            str2print = ip.ljust(50, "_")
 
-        screen.addstr(f"\n\t{str2print}\n")
+            screen.addstr(f"\n\t{str2print}\n")
 
-        if selected >= 2:
-            screen.addstr(f"\n\n\n\tConnecting to the game with IP address:\n\t{ip}\n\n")
+        if selected == 2:
+            screen.addstr(f"\n\n\n\t1. Connecting to the game with IP address:\n\t   {ip}\n\n")
             screen.refresh()
 
             return ip

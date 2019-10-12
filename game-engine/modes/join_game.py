@@ -15,7 +15,7 @@ def joinGame(screen):
         screen.addstr(error)
         screen.refresh()
 
-    screen.addstr(f"\tWaiting for host to start the game..\n\n")
+    screen.addstr(f"\t2. Waiting for host to start the game..\n\n")
     screen.refresh()
 
     # Listen for verification message from host
