@@ -1,7 +1,7 @@
 import curses
 
 
-def waiting_for_other_player(screen, serv):
+def waiting_for_other_player(screen, serv, host_ip):
     screen.clear()
     screen.scrollok(1)
 
@@ -22,7 +22,7 @@ def waiting_for_other_player(screen, serv):
         screen.refresh()
 
         screen.addstr("\n\n\n\t  ")
-        screen.addstr("1. Successfully created a new game server")
+        screen.addstr(f"1. Successfully created a new game server with IP address:\n\t     {host_ip}")
         screen.addstr("\n\t  ")
         screen.addstr("2. Waiting for another player to join the game..")
         screen.addstr("\n\t  ")

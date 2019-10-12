@@ -7,11 +7,16 @@ def hostGame(screen):
 
     # Setup socket object and host the server
     serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serv.bind(('0.0.0.0', 8080)) # TODO automatically use host's real IP
-    serv.listen(1)               # Listen and accept only one connection
+
+    host_name = socket.gethostname()
+    host_ip = socket.gethostbyname(host_name)
+    host_port = 8080
+
+    serv.bind((host_ip, host_port))
+    serv.listen(1)                  # Listen and accept only one connection
 
     # Another player has connected to the host's server
-    conn, addr = waiting_for_other_player(screen, serv)
+    conn, addr = waiting_for_other_player(screen, serv, host_ip)
     conn.send(str.encode("\tstarting game..."))    # Send verification message to client
 
 
