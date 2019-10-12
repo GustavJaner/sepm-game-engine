@@ -1,6 +1,4 @@
-
-
-class Data():
+class Data:
 
     def __init__(self, player1, player2, turn, n_times_played, turns_left, msg, type_of_game="1v1", round=None):
 

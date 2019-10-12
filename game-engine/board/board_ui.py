@@ -122,6 +122,7 @@ class BoardUI:
         self.screen_api.addstr(self.board_str)
         self.screen_api.addstr(f"Turns left: {data.turns_left}")
 
+<<<<<<< HEAD
         if data.type_of_game == "1v1":
             # List showing the options
             first_line = "\n\n\tMove cursor: WASD".ljust(
@@ -135,5 +136,14 @@ class BoardUI:
             first_line = "\n\n\tMove cursor: WASD".ljust(51) + data.players_str
             second_line = "\n\tSelect / Deselect / Move piece: space"
             third_line = "\n\tOpen menu: Q"
+=======
+        # List showing the options
+        first_line = "\n\n\tMove cursor: WASD".ljust(
+            51) + f"{data.players[0].name}: {data.players[0].n_wins}"
+        second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
+            50) + f"{data.players[1].name}: {data.players[1].n_wins}"
+        third_line = "\n\tOpen menu: Q".ljust(
+            50) + f"Tie: {data.n_times_played - data.players[0].n_wins - data.players[1].n_wins}"
+>>>>>>> [P2P] Started the integration of the communication platform
 
         self.screen_api.addstr(first_line + second_line + third_line)
