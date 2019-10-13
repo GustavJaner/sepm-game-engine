@@ -1,8 +1,8 @@
 from screens.general import show_home_screen
 from modes.local_game import LocalGame
 from screens.online_game import host_or_join_screen
-from modes.host_game import hostGame
-from modes.join_game import joinGame
+from modes.host_socket import host_socket
+from modes.client_socket import client_socket
 
 import curses
 
@@ -39,10 +39,9 @@ if __name__ == "__main__":
         h_or_j = host_or_join_screen(screen_api, ["Host game", "Join game"])
 
         if h_or_j == 0:
-            hostGame(screen_api)
+            host_socket(screen_api)
         elif h_or_j == 1:
-            joinGame(screen_api)
-
+            client_socket(screen_api)
 
     elif option == 2:
         screen_api.clear()
