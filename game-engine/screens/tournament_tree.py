@@ -38,64 +38,65 @@ def show_tree(win, rounds):
             temp[i][j] = rounds[i][j]
             print_tree(win, temp, lj)
             time.sleep(.3)
-def show_tournament_setup(screen_api, options):
-    screen_api.clear()
-    screen_api.scrollok(1)
 
-    current_selected = 0
+def show_tournament_setup(win, options):
+
+    win.clear()
+    win.scrollok(1)
+
+    current_option = 0
 
     while True:
 
-        screen_api.addstr("""
-         _   _  _   _          ____     _     __  __  _____ 
+        win.addstr("""
+         _   _  _   _          ____     _     __  __  _____
         | | | || | | |        / ___|   / \   |  \/  || ____|
-        | | | || | | | _____ | |  _   / _ \  | |\/| ||  _|  
-        | |_| || |_| ||_____|| |_| | / ___ \ | |  | || |___ 
+        | | | || | | | _____ | |  _   / _ \  | |\/| ||  _|
+        | |_| || |_| ||_____|| |_| | / ___ \ | |  | || |___
          \___/  \___/         \____|/_/   \_\|_|  |_||_____|
 
         ====================================================
         """)
 
-        screen_api.addstr("\n\n\t\t\t  ")
-        screen_api.addstr("How many players are going to play this wonderful tournament", curses.A_BOLD)
-        screen_api.refresh()
+        win.addstr("\n\n How many players are going to play this wonderful tournament?", curses.A_BOLD)
+        win.refresh()
 
-        screen_api.addstr("\n\n\n\t\t\t  ")
+        win.addstr("\n\n\n\t\t\t  ")
 
         for i, option in enumerate(options):
-            if i == current_selected:
-                screen_api.addstr(">  ")
+            if i == current_option:
+                win.addstr(">  ")
             else:
-                screen_api.addstr("   ")
+                win.addstr("   ")
 
-            screen_api.addstr(option + "\n\n\t\t\t  ")
+            win.addstr(option + "\n\n\t\t\t  ")
 
         curses.curs_set(0)
 
-        ch = screen_api.getch()
+        ch = win.getch()
         ch = chr(ch).lower()
 
         if ch == "w":
-            if current_selected == 0:
-                current_selected = len(options) - 1
+            if current_option == 0:
+                current_option = len(options) - 1
             else:
-                current_selected -= 1
+                current_option -= 1
         elif ch == "s":
-            if current_selected == len(options) - 1:
-                current_selected = 0
+            if current_option == len(options) - 1:
+                current_option = 0
             else:
-                current_selected += 1
+                current_option+= 1
         elif ch == " ":
-            return current_selected
-        screen_api.clear()
+            return current_option
+
+        win.clear()
 
 def input_player_names(win, player):
     '''
     This is a function that shows a form to get the names of the players
     '''
 
-    player1 = ""
-
+    player_name = ""
     underscores = "_" * 50
     selected = 1
 
@@ -106,37 +107,37 @@ def input_player_names(win, player):
         if selected == 1:
             win.addstr(
                 f"\n\n\n\tMmmm, I am afraid I don't know you.\n\n")
-            win.addstr(f"\n\n\tWhat is the name of Player {player}?\n")
+            win.addstr(f"\n\n\tWhat is the name of Player {player+1}?\n")
 
             if selected == 1:
-                str2print = player1.ljust(50, "_")
+                str2print = player_name.ljust(50, "_")
             win.addstr(
                 f"\n\t{str2print}\n")
         else:
             win.addstr(
                 f"\n\n\n\tOk. So, you are:\n\n")
 
-        if player1 != "" and selected >= 2:
+        if player_name != "" and selected >= 2:
             win.addstr(
-                f"\n\n\n\tPlayer 1: {player1}.\n\n")
+                f"\n\n\n\tPlayer 1: {player_name}.\n\n")
 
         if selected >= 2:
-            return player1
+            return player_name
 
         ch = win.getch()
 
         # Delete key
         if ch == 127:
             if selected == 1:
-                player1 = player1[:-1]
+                player_name = player_name[:-1]
         # New line
         elif ch == 10:
-            if selected == 1 and player1 != "":
+            if selected == 1 and player_name != "":
                 selected += 1
         # Any other char will be concatenated
         else:
-            if len(player1) < 50 and selected == 1:
-                player1 += chr(ch)
+            if len(player_name) < 50 and selected == 1:
+                player_name += chr(ch)
 
 def print_tree(win, rounds, lj):
     win.clear()
