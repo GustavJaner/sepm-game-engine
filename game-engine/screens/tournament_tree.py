@@ -57,7 +57,7 @@ def show_tournament_setup(screen_api, options):
         """)
 
         screen_api.addstr("\n\n\t\t\t  ")
-        screen_api.addstr("Main menu", curses.A_BOLD)
+        screen_api.addstr("How many players are going to play this wonderful tournament", curses.A_BOLD)
         screen_api.refresh()
 
         screen_api.addstr("\n\n\n\t\t\t  ")
