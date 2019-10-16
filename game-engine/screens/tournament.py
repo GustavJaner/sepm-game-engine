@@ -1,6 +1,16 @@
 import curses
 import time
 
+TITLE = """
+         _   _  _   _          ____     _     __  __  _____
+        | | | || | | |        / ___|   / \   |  \/  || ____|
+        | | | || | | | _____ | |  _   / _ \  | |\/| ||  _|
+        | |_| || |_| ||_____|| |_| | / ___ \ | |  | || |___
+         \___/  \___/         \____|/_/   \_\|_|  |_||_____|
+
+        ====================================================
+        """
+
 COORDS_NAMES = [
     # For 2 players
     [[(0, 0), (0, 2)], [(1, 1)]],
@@ -23,53 +33,32 @@ COORDS_NAMES = [
 ]
 
 
-def show_tree(win, rounds):
-    win.scrollok(1)
-
-    temp = [[]] * len(rounds)
-    for i, r in enumerate(rounds):
-        temp[i] = [""] * len(r)
-
-    # Max length of the names
-    lj = len(max(rounds[0], key=len))
-
-    for i, r in enumerate(rounds):
-        for j, c in enumerate(r):
-            temp[i][j] = rounds[i][j]
-            print_tree(win, temp, lj)
-            time.sleep(.3)
-
-def show_tournament_setup(win, options):
+def show_tournament_setup(win):
 
     win.clear()
     win.scrollok(1)
 
     current_option = 0
+    nplayers = 0
 
     while True:
 
-        win.addstr("""
-         _   _  _   _          ____     _     __  __  _____
-        | | | || | | |        / ___|   / \   |  \/  || ____|
-        | | | || | | | _____ | |  _   / _ \  | |\/| ||  _|
-        | |_| || |_| ||_____|| |_| | / ___ \ | |  | || |___
-         \___/  \___/         \____|/_/   \_\|_|  |_||_____|
+        win.addstr(TITLE)
 
-        ====================================================
-        """)
-
-        win.addstr("\n\n How many players are going to play this wonderful tournament?", curses.A_BOLD)
+        win.addstr(
+            "\n\n\tHow many players are going to play this wonderful tournament?", curses.A_BOLD)
         win.refresh()
 
-        win.addstr("\n\n\n\t\t\t  ")
+        win.addstr("\n\n\n\t\t\t")
 
+        options = range(2, 9)
         for i, option in enumerate(options):
             if i == current_option:
                 win.addstr(">  ")
             else:
                 win.addstr("   ")
 
-            win.addstr(option + "\n\n\t\t\t  ")
+            win.addstr(str(option) + "\n\n\t\t\t")
 
         curses.curs_set(0)
 
@@ -85,16 +74,28 @@ def show_tournament_setup(win, options):
             if current_option == len(options) - 1:
                 current_option = 0
             else:
-                current_option+= 1
+                current_option += 1
         elif ch == " ":
-            return current_option
+            nplayers = current_option + 2
+            break
 
         win.clear()
 
-def input_player_names(win, player):
+    names = []
+
+    for i in range(nplayers):
+        names.append(input_player_names(win, i + 1, nplayers))
+
+    return names
+
+
+def input_player_names(win, player, n):
     '''
     This is a function that shows a form to get the names of the players
     '''
+
+    win.clear()
+    win.scrollok(1)
 
     player_name = ""
     underscores = "_" * 50
@@ -103,11 +104,14 @@ def input_player_names(win, player):
     while True:
         curses.curs_set(0)
         win.clear()
+        win.addstr(TITLE)
+        win.addstr(
+            f"\n\n\t\t\tTournament - {n} players", curses.A_BOLD)
 
         if selected == 1:
             win.addstr(
                 f"\n\n\n\tMmmm, I am afraid I don't know you.\n\n")
-            win.addstr(f"\n\n\tWhat is the name of Player {player+1}?\n")
+            win.addstr(f"\n\n\tWhat is the name of Player {player}?\n")
 
             if selected == 1:
                 str2print = player_name.ljust(50, "_")
@@ -139,8 +143,27 @@ def input_player_names(win, player):
             if len(player_name) < 50 and selected == 1:
                 player_name += chr(ch)
 
+
+def show_tree(win, rounds):
+    win.scrollok(1)
+
+    temp = [[]] * len(rounds)
+    for i, r in enumerate(rounds):
+        temp[i] = [None] * len(r)
+
+    # Max length of the names
+    lj = len("Second round")
+
+    for i, r in enumerate(rounds):
+        for j, c in enumerate(r):
+            temp[i][j] = rounds[i][j]
+            print_tree(win, temp, lj)
+            time.sleep(.3)
+
+
 def print_tree(win, rounds, lj):
     win.clear()
+    win.addstr(TITLE)
     win.addstr("\n\n\t\t\tTournament\n\n\n")
 
     grid_size = {
@@ -154,8 +177,10 @@ def print_tree(win, rounds, lj):
         grid.append([" " * lj] * grid_size["width"])
 
     for i, r in enumerate(rounds):
-        for name, (x, y) in list(zip(r, COORDS_NAMES[len(rounds[0]) - 2][i])):
-            grid[y * 2][x] = name.ljust(lj, " ")
+        if len(r) > 0:
+            for player, (x, y) in list(zip(r, COORDS_NAMES[len(rounds[0]) - 2][i])):
+                if player != None:
+                    grid[y * 2][x] = (player.name).ljust(lj, " ")
 
     tree = []
     for row in grid:
