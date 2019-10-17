@@ -28,7 +28,7 @@ def waiting_for_other_player(screen, serv, host_ip):
         screen.addstr("\n\n\t  ")
         screen.refresh()
 
-        client_socket, client_ip = serv.accept()
+        client_socket = serv.accept()
         screen.addstr(f"3. Another player has joined your game!\n")
         # screen.addstr(f"3. Another player has joined your game with IP address:\n\t     {client_ip}")
         screen.refresh()
@@ -39,4 +39,4 @@ def waiting_for_other_player(screen, serv, host_ip):
         screen.clear()
         screen.refresh()
 
-        return client_socket, client_ip
+        return client_socket

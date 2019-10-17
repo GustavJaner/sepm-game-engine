@@ -74,7 +74,19 @@ class ClientGame:
         self.client_socket.send( pickle.dumps(msg) ) # Send message to Host
 
     def receive_obj(self):
-        host_msg = self.client_socket.recv(4096)     # Listen for message from Host
+        # buf = b''
+        # while len(buf) < 4:
+        #     buf += self.client_socket.recv(4 - len(buf))
+        #
+        # length = struct.unpack('!I', buf)[0]
+        #
+        # print(length)
+        #
+        # self.screen.addstr(str(length))
+        # self.screen.refresh()
+
+
+        host_msg = self.client_socket.recv()     # Listen for message from Host
 
         current_turn_data = pickle.loads(host_msg)
         return current_turn_data
