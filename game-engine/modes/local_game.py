@@ -11,8 +11,8 @@ class LocalGame():
     def __init__(self, screen_api):
         name_1, name_2, difficulties = show_local_game_screen(screen_api)
 
-        player1 = Player(name_1, "white")
-        player2 = Player(name_2, "black")
+        player1 = Player(name_1, "white", difficulties[0])
+        player2 = Player(name_2, "black", difficulties[1])
 
         n_times_played = 0
 
