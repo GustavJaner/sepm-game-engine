@@ -8,6 +8,7 @@ def check_movement(data):
                         if check_captured_marker(data.board.pieces, data.board.size, row, col):
                             captured = True
                     else:
+
                         if check_king_escape(data.board.pieces, data.board.size, row, col):
                             return True, "white", False
                         if check_captured_king(data.board.pieces, data.board.size, row, col):
