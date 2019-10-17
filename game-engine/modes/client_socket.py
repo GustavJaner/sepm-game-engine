@@ -6,8 +6,6 @@ from screens.join_game import insert_IP
 from modes.client_game import ClientGame
 
 
-
-
 def client_socket(screen):
     curses.curs_set(0)
     ip = insert_IP(screen)
