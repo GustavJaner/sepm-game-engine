@@ -33,7 +33,7 @@ def client_socket(screen):
     screen.refresh()
 
     # Listen for verification message from host
-    host_msg = client_socket.recv().decode()
+    host_msg = client_socket.recv()
     screen.addstr(host_msg)
     screen.refresh()
     screen.clear()

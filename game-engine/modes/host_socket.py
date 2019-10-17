@@ -22,7 +22,7 @@ def host_socket(screen):
     client_socket = waiting_for_other_player(screen, serv, host_ip)
 
     print("CONNECT")
-    client_socket.send(str.encode("\tstarting game..."))    # Send verification message to client
+    client_socket.send("\tstarting game...")    # Send verification message to client
 
     # Start the online Game
     game = HostGame(screen, client_socket)
