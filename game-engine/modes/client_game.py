@@ -33,7 +33,7 @@ class ClientGame:
 
             # Loop Game Turns - loop until someone wins/tie or quit
             while True:
-                game_round.print_game(current_turn_data) # TODO does not print
+                game_round.print_game(current_turn_data)
 
                 # if it is the Client's turn
                 if host_data.players[1].team == current_turn_data.turn:
@@ -58,7 +58,6 @@ class ClientGame:
                 # Wait for Host to play his/her turn
                 else:
                     current_turn_data = self.receive_obj()
-                    game_round.print_game(current_turn_data) # TODO does not print
 
                     if current_turn_data.event != None:
                         if current_turn_data.event == "pause":

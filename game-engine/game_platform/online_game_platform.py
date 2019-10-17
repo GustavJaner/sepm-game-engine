@@ -148,3 +148,4 @@ class OnlineGamePlatform():
 
     def print_game(self, data):
         self.board_ui.print_board(data)
+        self.screen.refresh()
