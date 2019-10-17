@@ -1,11 +1,11 @@
 import socket
 import pickle
 import curses
+from multiprocessing.connection import Client
 from screens.join_game import insert_IP
 from modes.client_game import ClientGame
 
 
-from multiprocessing.connection import Client
 
 
 def client_socket(screen):
@@ -15,19 +15,7 @@ def client_socket(screen):
 
     # Setup socket and connect to host
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #error = client_socket.connect_ex((ip, host_port))
-
     client_socket = Client((ip, host_port))
-
-
-    # If connection was unsuccessful
-    # if error != 0:
-    #     #screen.addstr(error)
-    #     #screen.refresh()
-    #     print(error)
-    #     screen.getch()
-    #     client_socket.close()
-    #     return
 
     screen.addstr(f"\t2. Waiting for host to start the game..\n\n")
     screen.refresh()

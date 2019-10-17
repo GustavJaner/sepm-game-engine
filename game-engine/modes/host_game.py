@@ -1,6 +1,6 @@
 import pickle
-from screens.local_game import show_local_game_screen
 from game_platform.online_game_platform import OnlineGamePlatform
+from screens.local_game import show_local_game_screen
 from modes.player import Player
 from game_platform.data import Data
 
@@ -94,13 +94,7 @@ class HostGame:
         self.client_socket.send( pickle.dumps(msg) ) # Send message to Client
 
     def receive_obj(self):
-        # buf = b''
-        # while len(buf) < 4:
-        #     buf += self.client_socket.recv(4 - len(buf))
-        #
-        # length = struct.unpack('!I', buf)[0]
-
-        client_msg = self.client_socket.recv()   # Listen for message from Client
+        client_msg = self.client_socket.recv()       # Listen for message from Client
 
         current_turn_data = pickle.loads(client_msg)
         return current_turn_data

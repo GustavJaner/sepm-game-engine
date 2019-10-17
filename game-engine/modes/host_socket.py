@@ -13,9 +13,6 @@ def host_socket(screen):
     host_ip = socket.gethostbyname(host_name)
     host_port = 8080
 
-    # serv.bind((host_ip, host_port))
-    # serv.listen(5)                  # Listen and accept only one connection
-
     serv = Listener((host_ip, host_port))
 
     # Another player has connected to the host's server
