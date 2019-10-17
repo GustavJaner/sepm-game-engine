@@ -9,7 +9,7 @@ TURNS_IN_A_GAME = 200
 
 class LocalGame():
     def __init__(self, screen_api):
-        name_1, name_2 = show_local_game_screen(screen_api)
+        name_1, name_2, difficulties = show_local_game_screen(screen_api)
 
         player1 = Player(name_1, "white")
         player2 = Player(name_2, "black")

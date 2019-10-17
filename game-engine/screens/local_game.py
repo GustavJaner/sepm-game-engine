@@ -1,4 +1,11 @@
 import curses
+import random
+
+from screens.general import *
+
+
+AI_NAMES = ["Mariam", "Alice", "Amanda", "Gustav",
+            "Jenny", "Matilda", "Michael", "Mikaela", "Max"]
 
 
 def show_local_game_screen(win):
@@ -12,6 +19,9 @@ def show_local_game_screen(win):
     underscores = "_" * 50
     selected = 1
 
+    difficulties = [None, None]
+    difficulties_options = ["Easy", "Medium", "Hard"]
+
     while True:
         curses.curs_set(0)
         win.clear()
@@ -19,7 +29,8 @@ def show_local_game_screen(win):
         if selected == 1 or selected == 2:
             win.addstr(
                 f"\n\n\n\tMmmm, I am afraid I don't know you.\n\n")
-            win.addstr(f"\n\n\tWhat is the name of Player {selected}?\n")
+            win.addstr(
+                f"\n\n\tWhat is the name of Player {selected}?\n\tIf the player is an AI, just type AI in the input field. Roger, roger.\n")
 
             if selected == 1:
                 str2print = player1.ljust(50, "_")
@@ -45,7 +56,7 @@ def show_local_game_screen(win):
                 f"\n\n\n\t-------------------Press any key to start-------------------\n\n")
             win.getch()
 
-            return player1, player2
+            return player1, player2, difficulties
 
         ch = win.getch()
 
@@ -59,8 +70,16 @@ def show_local_game_screen(win):
         # New line
         elif ch == 10:
             if selected == 1 and player1 != "":
+                if player1 == "AI":
+                    option = show_home_screen(win, difficulties_options)
+                    difficulties[0] = difficulties_options[option]
+                    player1 = f"{random.choice(AI_NAMES)} (AI | {difficulties_options[option]})"
                 selected += 1
             if selected == 2 and player2 != "":
+                if player2 == "AI":
+                    option = show_home_screen(win, difficulties_options)
+                    difficulties[1] = difficulties_options[option]
+                    player2 = f"{random.choice(AI_NAMES)} (AI | {difficulties_options[option]})"
                 selected += 1
         # Any other char will be concatenated
         else:
