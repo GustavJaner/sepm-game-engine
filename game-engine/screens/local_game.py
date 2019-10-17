@@ -30,7 +30,7 @@ def show_local_game_screen(win):
             win.addstr(
                 f"\n\n\n\tMmmm, I am afraid I don't know you.\n\n")
             win.addstr(
-                f"\n\n\tWhat is the name of Player {selected}?\n\tIf the player is an AI, just type AI in the input field. Roger, roger.\n")
+                f"\n\n\tWhat is the name of player {selected}?\n\tIf the player is an AI, just type AI in the input field. Roger, roger.\n")
 
             if selected == 1:
                 str2print = player1.ljust(50, "_")

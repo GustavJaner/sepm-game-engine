@@ -1,5 +1,12 @@
 import curses
+import random
 import time
+
+from screens.general import *
+
+
+AI_NAMES = ["Mariam", "Alice", "Amanda", "Gustav",
+            "Jenny", "Matilda", "Michael", "Mikaela", "Max"]
 
 TITLE = """
          _   _  _   _          ____     _     __  __  _____
@@ -83,10 +90,20 @@ def show_tournament_setup(win):
 
     names = []
 
-    for i in range(nplayers):
-        names.append(input_player_names(win, i + 1, nplayers))
+    difficulties = [None] * nplayers
+    difficulties_options = ["Easy", "Medium", "Hard"]
 
-    return names
+    for i in range(nplayers):
+        name = input_player_names(win, i + 1, nplayers)
+        if name == "AI":
+            option = show_home_screen(win, difficulties_options)
+            difficulties[i] = difficulties_options[option]
+            ai_name = random.choice(AI_NAMES)
+            AI_NAMES.remove(ai_name)
+            name = f"{ai_name} (AI | {difficulties_options[option]})"
+        names.append(name)
+
+    return names, difficulties
 
 
 def input_player_names(win, player, n):
@@ -111,7 +128,8 @@ def input_player_names(win, player, n):
         if selected == 1:
             win.addstr(
                 f"\n\n\n\tMmmm, I am afraid I don't know you.\n\n")
-            win.addstr(f"\n\n\tWhat is the name of Player {player}?\n")
+            win.addstr(
+                f"\n\n\tWhat is the name of player {player}?\n\tIf the player is an AI, just type AI in the input field. Roger, roger.\n")
 
             if selected == 1:
                 str2print = player_name.ljust(50, "_")
@@ -152,7 +170,7 @@ def show_tree(win, rounds):
         temp[i] = [None] * len(r)
 
     # Max length of the names
-    lj = len("Second round")
+    lj = 30
 
     for i, r in enumerate(rounds):
         for j, c in enumerate(r):
