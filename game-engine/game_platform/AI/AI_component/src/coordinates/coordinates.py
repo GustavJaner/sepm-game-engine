@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import math
 
-import utils
+import game_platform.AI.AI_component.src.utils as utils
 
-from .coord import Coord
+from game_platform.AI.AI_component.src.coordinates.coord import Coord
 
 
 class Coordinates(metaclass=utils.Singleton):

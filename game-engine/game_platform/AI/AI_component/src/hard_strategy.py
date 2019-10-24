@@ -4,8 +4,8 @@ import copy
 from datetime import datetime, timedelta
 import math
 
-from ia import IAStrategy
-from hard_policy import Policy
+from game_platform.AI.AI_component.src.ia import IAStrategy
+from game_platform.AI.AI_component.src.hard_policy import Policy
 
 
 class HardStrategy(IAStrategy):
@@ -154,6 +154,7 @@ class HardStrategy(IAStrategy):
     '''
     Provisional evaluation used for testing purposes.
     '''
+
     def basic_eval(self, board_state, player_id):
         current_player = board_state.get_turn_player()
         opponent = board_state.get_opponent_id()

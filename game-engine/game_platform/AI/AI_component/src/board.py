@@ -3,10 +3,10 @@
 import enum
 import json
 
-import constants
-import move
+import game_platform.AI.AI_component.src.constants as constants
+import game_platform.AI.AI_component.src.move as move
 
-from coordinates.coordinates import Coordinates
+from game_platform.AI.AI_component.src.coordinates.coordinates import Coordinates
 
 
 class IllegalMoveException(Exception):
@@ -253,7 +253,6 @@ class BoardState:
             all_moves = all_moves + self.get_position_legal_moves(coordinate)
 
         return all_moves
-
     def _has_player_legal_move(self, player_id):
         for coord in self._get_player_coordinates(player_id):
             for neighbor in self.COORDINATES.get_neighbors(coord):
@@ -283,6 +282,7 @@ class BoardState:
      Returned moves are assumed to be moves for the player whose turn it
      currently is.
      '''
+
     def get_position_legal_moves(self, start_coord):
         legal_moves = list()
         piece = self.get_piece_at(start_coord)

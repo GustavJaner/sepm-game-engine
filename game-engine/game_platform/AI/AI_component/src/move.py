@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from coordinates.coordinates import Coordinates
+from game_platform.AI.AI_component.src.coordinates.coordinates import Coordinates
 
 
 class Move:
