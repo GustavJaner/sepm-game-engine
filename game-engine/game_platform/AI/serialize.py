@@ -63,7 +63,10 @@ def get_move(board_game, max_turns, difficulty, next_player, next_turn):
     state.initialize_from_file("./tmp/state.json")
 
     res = IA.calculate_move(state)
-    origin = (8 - res.x_start, 8 - res.y_start)
-    destination = (8 - res.x_end, 8 - res.y_end)
+    origin = (8 - res.x_start, res.y_start)
+    destination = (8 - res.x_end, res.y_end)
+
+    with open("./tt.tt", "w+") as fd:
+        fd.write(str(origin) + "  " + str(destination))
 
     return origin, destination

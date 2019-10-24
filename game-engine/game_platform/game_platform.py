@@ -119,7 +119,7 @@ class GamePlatform():
             else:
                 if self.data.turn == self.data.players[0].team and self.data.players[0].is_AI:
                     # get_move(board, max_turns, difficulty, next_player, next_turn):
-                    next_player = "BLACK" if self.data.turn == "white" else "WHITE"
+                    next_player = "WHITE" if self.data.turn == "white" else "BLACK"
                     ((xo, yo), (xf, yf)) = get_move(
                         self.data.board.pieces, 200, self.data.players[0].difficulty, next_player, self.data.turns_left - 1)
                     self.data.board_ui.move_cursor(self.data, (xo, yo))
@@ -130,7 +130,7 @@ class GamePlatform():
                     self.data.board_ui.move_cursor(self.data, (xf, yf))
                     self.one_piece_selected(xf, yf)
                 elif self.data.turn == self.data.players[1].team and self.data.players[1].is_AI:
-                    next_player = "BLACK" if self.data.turn == "white" else "WHITE"
+                    next_player = "WHITE" if self.data.turn == "white" else "BLACK"
                     ((xo, yo), (xf, yf)) = get_move(
                         self.data.board.pieces, 200, self.data.players[0].difficulty, next_player, self.data.turns_left - 1)
                     self.data.board_ui.move_cursor(self.data, (xo, yo))
