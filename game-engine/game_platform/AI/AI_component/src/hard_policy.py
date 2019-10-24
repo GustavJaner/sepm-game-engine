@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import move
+import game_platform.AI.AI_component.src.move as move
 
-from board import BoardState
-from coordinates.coord import Coord
+from game_platform.AI.AI_component.src.board import BoardState
+from game_platform.AI.AI_component.src.coordinates.coord import Coord
 
 '''
 This class is mostly used to keep methods that are used in the the game state
@@ -34,16 +34,16 @@ class Policy:
             '''
             if turn < 40:
                 evaluation_value = my_pieces_value - \
-                        opponent_pieces_value + \
-                        Policy.king_value(board_state)
+                    opponent_pieces_value + \
+                    Policy.king_value(board_state)
             elif turn < 70:
                 evaluation_value = my_pieces_value - \
-                        opponent_pieces_value + \
-                        2.0 * Policy.king_value(board_state)
+                    opponent_pieces_value + \
+                    2.0 * Policy.king_value(board_state)
             else:
                 evaluation_value = my_pieces_value - \
-                        opponent_pieces_value + \
-                        3.0 * Policy.king_value(board_state)
+                    opponent_pieces_value + \
+                    3.0 * Policy.king_value(board_state)
 
         else:
             '''
@@ -53,19 +53,19 @@ class Policy:
             '''
             if turn < 40:
                 evaluation_value = my_pieces_value - opponent_pieces_value + \
-                        Policy.pieces_around_corner(board_state) - \
-                        Policy.king_value(board_state) + \
-                        Policy.enemy_pieces_around_king(board_state)
+                    Policy.pieces_around_corner(board_state) - \
+                    Policy.king_value(board_state) + \
+                    Policy.enemy_pieces_around_king(board_state)
             elif turn < 70:
                 evaluation_value = 2.0 * (my_pieces_value - opponent_pieces_value) + \
-                        Policy.pieces_around_corner(board_state) - \
-                        1.5 * Policy.king_value(board_state) + \
-                        6 * Policy.enemy_pieces_around_king(board_state)
+                    Policy.pieces_around_corner(board_state) - \
+                    1.5 * Policy.king_value(board_state) + \
+                    6 * Policy.enemy_pieces_around_king(board_state)
             else:
                 evaluation_value = 3.0 * (my_pieces_value - opponent_pieces_value) + \
-                        Policy.pieces_around_corner(board_state) - \
-                        12 * Policy.king_value(board_state) + \
-                        6 * Policy.enemy_pieces_around_king(board_state)
+                    Policy.pieces_around_corner(board_state) - \
+                    12 * Policy.king_value(board_state) + \
+                    6 * Policy.enemy_pieces_around_king(board_state)
 
         return evaluation_value
 
@@ -190,11 +190,11 @@ class Policy:
             end_coord = move.get_end_pos()
             if start_coord.max_diff(corner) > end_coord.max_diff(corner):
                 internal_move_counter[idx] = \
-                        Policy.calculate_min_moves_to_corner(
-                            board_state,
-                            corner,
-                            move_counter + 1,
-                            king_position)
+                    Policy.calculate_min_moves_to_corner(
+                    board_state,
+                    corner,
+                    move_counter + 1,
+                    king_position)
 
         '''
         Find the min number of moves to reach the corner, or return 50 if

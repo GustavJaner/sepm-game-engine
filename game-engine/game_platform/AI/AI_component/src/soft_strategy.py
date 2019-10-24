@@ -2,7 +2,7 @@
 
 import random
 
-from ia import IAStrategy
+from game_platform.AI.AI_component.src.ia import IAStrategy
 
 
 class SoftStrategy(IAStrategy):

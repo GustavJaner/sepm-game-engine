@@ -3,9 +3,9 @@
 import copy
 import random
 
-from ia import IAStrategy, IA
-from hard_strategy import HardStrategy
-from soft_strategy import SoftStrategy
+from game_platform.AI.AI_component.src.ia import IAStrategy, IA
+from game_platform.AI.AI_component.src.hard_strategy import HardStrategy
+from game_platform.AI.AI_component.src.soft_strategy import SoftStrategy
 
 
 class MediumStrategy(IAStrategy):

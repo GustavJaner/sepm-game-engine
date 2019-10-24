@@ -7,8 +7,8 @@ class Player():
         if difficulty == None:
             self.is_AI = False
         else:
-            self.difficulty = difficulty
             self.is_AI = True
+        self.difficulty = difficulty
 
     def change_team(self):
         self.team = "white" if self.team == "black" else "black"
