@@ -50,7 +50,7 @@ class Board():
 
     def check_cell(self, x, y, xo, yo):
         if not self.pieces[x][y].is_piece():
-            if self.pieces[xo][yo].team == "black" and self.pieces[x][y].corner:
+            if self.pieces[xo][yo].role == "marker" and self.pieces[x][y].corner:
                 return True
             self.pieces[x][y].set_possible_target(True)
             self.possible_targets_coords.append((x, y))
