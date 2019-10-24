@@ -98,6 +98,7 @@ class GamePlatform():
             self.event = "pause"
 
     def polling(self):
+        self.data.board_ui.move_cursor(self.data, (4, 8))
         self.data.board_ui.print_board(self.data)
 
         action = None
