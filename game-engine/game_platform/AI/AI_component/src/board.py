@@ -195,7 +195,7 @@ class BoardState:
                 # It the piece is not a King, I just need two threats
                 else:
                     threats = 0
-                    for threat in self.COORDINATES.get_neighbors(enemy):
+                    for threat in self.COORDINATES.get_neighbors_x(enemy):
                         threat_player = self._piece_to_player(
                             self.get_piece_at(threat))
                         if threat_player == self._next_player:
@@ -203,6 +203,17 @@ class BoardState:
 
                     if threats < 2:
                         can_capture = False
+
+                    if(can_capture):
+                        threats = 0
+                        for threat in self.COORDINATES.get_neighbors_y(enemy):
+                            threat_player = self._piece_to_player(
+                                self.get_piece_at(threat))
+                            if threat_player == self._next_player:
+                                threats = threats + 1
+
+                        if threats < 2:
+                            can_capture = False
 
                 if can_capture:
                     captured_enemies.append(enemy)

@@ -77,6 +77,30 @@ class Coordinates(metaclass=utils.Singleton):
 
         return neighbors
 
+        
+
+    def get_neighbors_x(self, coord):
+        neighbors = list()
+
+        for i in [coord.x - 1, coord.x + 1]:
+            try:
+                neighbors.append(self.get(i, coord.y))
+            except IndexError:
+                pass
+            
+        return neighbors
+            
+            
+    def get_neighbors_y(self, coord):
+        neighbors = list()
+        for j in [coord.y - 1, coord.y + 1]:
+            try:
+                neighbors.append(self.get(coord.x, j))
+            except IndexError:
+                pass
+
+        return neighbors
+
     def distance_to_corner(self, coord):
         '''
         Given a coordinate, returns the distance between it and the closest
