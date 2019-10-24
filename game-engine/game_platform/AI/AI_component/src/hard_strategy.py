@@ -45,7 +45,7 @@ class HardStrategy(IAStrategy):
             Evaluating a move to depth 3 takes up to 60ms in most cases, thus
             if we reach 120000ms, return the best move found thus far.
             '''
-            print("CURRENT MOVE: ", current_move)
+            #print("CURRENT MOVE: ", current_move)
             delta = timedelta(milliseconds=self.DEFAULT_TIME_LIMIT)
             if datetime.now() - start_time > delta:
                 print("TIMEOUT!")
@@ -77,7 +77,7 @@ class HardStrategy(IAStrategy):
                       beta,
                       depth,
                       max_depth):
-        print(" - value = (a: {}, b: {}, d: {})".format(alpha, beta, depth))
+        #print(" - value = (a: {}, b: {}, d: {})".format(alpha, beta, depth))
         '''
         This implementation of the MiniMaxValue() method is a hybrid between
         the pseudocode of minimax used in the AI course and the code for alpha
