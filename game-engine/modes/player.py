@@ -1,8 +1,14 @@
 class Player():
-    def __init__(self, name, team=None, n_wins=0):
+    def __init__(self, name, team=None, n_wins=0, difficulty=None):
         self.name = name
         self.team = team
         self.n_wins = n_wins
+
+        if difficulty == None:
+            self.is_AI = False
+        else:
+            self.is_AI = True
+        self.difficulty = difficulty
 
     def change_team(self):
         self.team = "white" if self.team == "black" else "black"

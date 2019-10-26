@@ -128,12 +128,30 @@ class BoardUI:
                 51) + f"Player 1: {data.players[0].n_wins}"
             second_line = "\n\tSelect / Deselect / Move piece: space".ljust(
                 50) + f"Player 2: {data.players[1].n_wins}"
-            third_line = "\n\tOpen menu: Q".ljust(
-                50) + f"Tie: {data.n_times_played - data.players[0].n_wins - data.players[1].n_wins}"
+            # third_line = "\n\tOpen menu: Q".ljust(
+            #    50) + f"Tie: {data.n_times_played - data.players[0].n_wins - data.players[1].n_wins}"
         elif data.type_of_game == "tournament":
             # List showing the options
             first_line = "\n\n\tMove cursor: WASD".ljust(51) + data.players_str
             second_line = "\n\tSelect / Deselect / Move piece: space"
             third_line = "\n\tOpen menu: Q"
 
-        self.screen_api.addstr(first_line + second_line + third_line)
+        self.screen_api.addstr(first_line + second_line)
+        self.screen_api.refresh()
+
+    def move_cursor(self, data, destination):
+        (x, y) = self.cursor_pos
+        (dest_x, dest_y) = destination
+
+        while x != dest_x or y != dest_y:
+            if x < dest_x:
+                x += 1
+            elif x > dest_x:
+                x -= 1
+            if y < dest_y:
+                y += 1
+            elif y > dest_y:
+                y -= 1
+            self.cursor_pos = (x, y)
+            self.print_board(data)
+            time.sleep(.3)

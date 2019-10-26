@@ -1,9 +1,12 @@
 import sys
 import curses
+import time
 
 from board.board_ui import BoardUI
 from game_platform.board import Board
 from game_platform.rules import check_movement
+
+from game_platform.AI.serialize import *
 
 from screens import *
 
@@ -98,7 +101,7 @@ class GamePlatform():
             self.event = "pause"
 
     def polling(self):
-        self.data.board_ui.print_board(self.data)
+        #self.data.board_ui.move_cursor(self.data, (4, 8))
 
         action = None
 
@@ -114,8 +117,32 @@ class GamePlatform():
             if captured:
                 self.change_turn()
             else:
-                # Wait to read a key
-                action = self.data.board_ui.key_listener()
+                if self.data.turn == self.data.players[0].team and self.data.players[0].is_AI:
+                    # get_move(board, max_turns, difficulty, next_player, next_turn):
+                    next_player = "WHITE" if self.data.turn == "white" else "BLACK"
+                    ((xo, yo), (xf, yf)) = get_move(
+                        self.data.board.pieces, 200, self.data.players[0].difficulty, next_player, self.data.turns_left - 1)
+                    self.data.board_ui.move_cursor(self.data, (xo, yo))
+                    self.no_piece_selected(xo, yo)
+                    self.data.board_ui.print_board(self.data)
+                    self.screen_api.refresh()
+                    time.sleep(1)
+                    self.data.board_ui.move_cursor(self.data, (xf, yf))
+                    self.one_piece_selected(xf, yf)
+                elif self.data.turn == self.data.players[1].team and self.data.players[1].is_AI:
+                    next_player = "WHITE" if self.data.turn == "white" else "BLACK"
+                    ((xo, yo), (xf, yf)) = get_move(
+                        self.data.board.pieces, 200, self.data.players[0].difficulty, next_player, self.data.turns_left - 1)
+                    self.data.board_ui.move_cursor(self.data, (xo, yo))
+                    self.no_piece_selected(xo, yo)
+                    self.data.board_ui.print_board(self.data)
+                    self.screen_api.refresh()
+                    time.sleep(1)
+                    self.data.board_ui.move_cursor(self.data, (xf, yf))
+                    self.one_piece_selected(xf, yf)
+                else:
+                    # Wait to read a key
+                    action = self.data.board_ui.key_listener()
 
                 if action != None:
                     x, y = self.data.board_ui.cursor_pos[0], self.data.board_ui.cursor_pos[1]

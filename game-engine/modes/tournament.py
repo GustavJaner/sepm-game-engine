@@ -15,7 +15,7 @@ class Tournament():
     def __init__(self, screen_api):
         self.screen_api = screen_api
 
-        names = show_tournament_setup(screen_api)
+        names, difficulties = show_tournament_setup(screen_api)
 
         self.players = []
         for name in names:
