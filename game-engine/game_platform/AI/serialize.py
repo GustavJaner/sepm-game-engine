@@ -1,4 +1,5 @@
 import json
+import os
 
 import game_platform.AI.AI_component.src.soft_strategy as soft_strategy
 import game_platform.AI.AI_component.src.medium_strategy as medium_strategy
@@ -50,7 +51,7 @@ def get_move(board_game, max_turns, difficulty, next_player, next_turn):
     jsonstr = get_json(board_game, max_turns, difficulty,
                        next_player, next_turn)
 
-    with open("./tmp/state.json", "w+") as fd:
+    with open("./state.json", "w") as fd:
         fd.write(json.dumps(jsonstr))
 
     strategy = soft_strategy.SoftStrategy()
@@ -60,13 +61,11 @@ def get_move(board_game, max_turns, difficulty, next_player, next_turn):
     IA = ia.IA(strategy)
 
     state = board.BoardState()
-    state.initialize_from_file("./tmp/state.json")
+    state.initialize_from_file("./state.json")
 
     res = IA.calculate_move(state)
     origin = (8 - res.x_start, res.y_start)
     destination = (8 - res.x_end, res.y_end)
 
-    with open("./tt.tt", "w+") as fd:
-        fd.write(str(origin) + "  " + str(destination))
-
+    os.remove("./state.json")
     return origin, destination

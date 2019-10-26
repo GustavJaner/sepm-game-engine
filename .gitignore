@@ -127,3 +127,6 @@ dmypy.json
 .DS_Store
 
 .vscode
+
+
+state.json
