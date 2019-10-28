@@ -137,3 +137,21 @@ class BoardUI:
             third_line = "\n\tOpen menu: Q"
 
         self.screen_api.addstr(first_line + second_line + third_line)
+        self.screen_api.refresh()
+
+    def move_cursor(self, data, destination):
+        (x, y) = self.cursor_pos
+        (dest_x, dest_y) = destination
+
+        while x != dest_x or y != dest_y:
+            if x < dest_x:
+                x += 1
+            elif x > dest_x:
+                x -= 1
+            if y < dest_y:
+                y += 1
+            elif y > dest_y:
+                y -= 1
+            self.cursor_pos = (x, y)
+            self.print_board(data)
+            time.sleep(.3)

@@ -125,3 +125,8 @@ dmypy.json
 
 # Mac specific
 .DS_Store
+
+.vscode
+
+
+state.json
